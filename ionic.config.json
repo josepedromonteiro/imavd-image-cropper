@@ -1,0 +1,7 @@
+{
+  "name": "image-editor",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
