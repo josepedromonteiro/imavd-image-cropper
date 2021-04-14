@@ -1,5 +1,6 @@
 import { Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { CardItem } from '../components/card-item/card-item.component';
+import { ImageCroppedEvent } from 'ngx-image-cropper';
 
 @Component({
   selector: 'app-home',
@@ -20,10 +21,13 @@ export class HomePage {
   public imageMetadata: CardItem[] = [
   ];
 
+  showCropper: boolean = false
+  imageChangedEvent: any = '';
+
   constructor() {
   }
 
-  processFile(imageInput: HTMLInputElement) {
+  processFile(event: any, imageInput: HTMLInputElement) {
     console.log(imageInput.files);
     const file: File = imageInput.files[0];
     const reader = new FileReader();
@@ -55,6 +59,8 @@ export class HomePage {
       }
     });
     reader.readAsDataURL(file);
+
+    this.imageChangedEvent = event;
   }
 
   onImageLoad(evt: any) {
@@ -103,6 +109,18 @@ export class HomePage {
     canvas.height = image.height;
     console.log(canvas);
     canvas.getContext('2d').drawImage(image, 0, 0, image.width, image.height);
+  }
+
+  imageCropped(event: ImageCroppedEvent) {
+    this.imageUrl = event.base64;
+  }
+
+  saveImage() {
+    var a = document.createElement('a');
+    a.href = this.imageUrl;
+    a.download = 'image.png';
+
+    a.click()
   }
 }
 

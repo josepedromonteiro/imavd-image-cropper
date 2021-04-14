@@ -7,12 +7,15 @@ import { HomePage } from './home.page';
 import { HomePageRoutingModule } from './home-routing.module';
 import { CardItemComponent } from '../components/card-item/card-item.component';
 
+import { ImageCropperModule } from 'ngx-image-cropper';
+
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    HomePageRoutingModule
+    HomePageRoutingModule,
+    ImageCropperModule
   ],
   declarations: [HomePage, CardItemComponent]
 })
