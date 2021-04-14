@@ -1,0 +1,22 @@
+app-card-item {
+  position: relative;
+  width: 100%;
+
+  .item {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 5px;
+
+    p {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    b {
+      margin-right: 5px;
+    }
+  }
+}

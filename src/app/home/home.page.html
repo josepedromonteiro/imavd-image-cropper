@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Blank
+      Image Editor
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -14,7 +14,52 @@
   </ion-header>
 
   <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+    <div class="imagePreview">
+      <img #imageElement *ngIf="imageUrl" [src]="imageUrl" (click)="clickColor($event)" (load)="onImageLoad($event)" (mousemove)="onMouseEnter($event)" />
+    </div>
+    <div class="details">
+        <ion-button *ngIf="!imageUrl else imageData" (click)="imageInput.click()">
+          Import image
+        </ion-button>
+    </div>
   </div>
 </ion-content>
+
+<ng-template #imageData>
+  <ion-list mode="ios" lines="none">
+    <ion-list-header>
+      Image Information
+    </ion-list-header>
+
+    <ion-item>
+      <ion-card>
+        <ion-card-content>
+          <app-card-item *ngFor="let item of imageMetadata" [item]="item">
+          </app-card-item>
+        </ion-card-content>
+      </ion-card>
+    </ion-item>
+
+    <ion-list-header>
+      Pixel counter
+    </ion-list-header>
+    <ion-button class="picker-button" expand="block" [fill]="pickColorActive ? 'solid' : 'outline'" (click)="pickColorActive=!pickColorActive">
+      Pick color
+    </ion-button>
+
+    <div class="flex picker-info">
+      <div class="picker" [ngStyle]="{'background-color': pickedColor}">
+
+      </div>
+      <span class="flex-1 text-left">{{pixelCount}} px</span>
+    </div>
+  </ion-list>
+</ng-template>
+
+<input #imageInput
+       type="file"
+       accept="image/*"
+       hidden
+       (change)="processFile(imageInput)">
+
+<canvas #canvasElement hidden></canvas>
