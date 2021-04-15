@@ -14,8 +14,10 @@
   </ion-header>
 
   <div id="container">
-    <div class="imagePreview">
-      <img #imageElement *ngIf="imageUrl" [src]="imageUrl" (click)="clickColor($event)" (load)="onImageLoad($event)" (mousemove)="onMouseEnter($event)" />
+    <div class="imagePreview" #imagePreview>
+<canvas #canvasElement (click)="clickColor($event)"></canvas>
+
+      <img #imageElement *ngIf="imageUrl" [src]="imageUrl"  (load)="onImageLoad($event)"  />
     </div>
     <div class="details">
         <ion-button *ngIf="!imageUrl else imageData" (click)="imageInput.click()">
@@ -61,5 +63,3 @@
        accept="image/*"
        hidden
        (change)="processFile(imageInput)">
-
-<canvas #canvasElement hidden></canvas>
