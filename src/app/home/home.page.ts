@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { CardItem } from '../components/card-item/card-item.component';
 import { enablePanzoom } from './panzoom';
+import { ImageCroppedEvent } from 'ngx-image-cropper';
 
 @Component({
   selector: 'app-home',
@@ -40,6 +41,9 @@ export class HomePage implements AfterViewInit {
   public imageUrl = 'assets/shapes.svg';
   public imageMetadata: CardItem[] = [];
 
+  showCropper: boolean = false;
+  imageChangedEvent: any = '';
+
   constructor(private changeRef: ChangeDetectorRef) {}
   ngAfterViewInit(): void {
     this.canvasElement.nativeElement.addEventListener(
@@ -51,7 +55,8 @@ export class HomePage implements AfterViewInit {
     );
   }
 
-  processFile(imageInput: HTMLInputElement) {
+  processFile(event: any, imageInput: HTMLInputElement) {
+    console.log(imageInput.files);
     const file: File = imageInput.files[0];
     const reader = new FileReader();
     this.imageMetadata = [];
@@ -85,6 +90,8 @@ export class HomePage implements AfterViewInit {
       }
     });
     reader.readAsDataURL(file);
+
+    this.imageChangedEvent = event;
   }
 
   onImageLoad(evt: any) {
@@ -211,6 +218,18 @@ export class HomePage implements AfterViewInit {
       }
     }
     return npixels;
+  }
+
+  imageCropped(event: ImageCroppedEvent) {
+    this.imageUrl = event.base64;
+  }
+
+  saveImage() {
+    var a = document.createElement('a');
+    a.href = this.imageUrl;
+    a.download = 'image.png';
+
+    a.click()
   }
 }
 

@@ -17,7 +17,9 @@
     <div class="imagePreview" #imagePreview>
 <canvas #canvasElement (click)="clickColor($event)"></canvas>
 
-      <img #imageElement *ngIf="imageUrl" [src]="imageUrl"  (load)="onImageLoad($event)"  />
+      <img #imageElement *ngIf="imageUrl&& !showCropper" [src]="imageUrl"  (load)="onImageLoad($event)"  />
+      <image-cropper *ngIf="showCropper" [imageChangedEvent]="imageChangedEvent" (imageCropped)="imageCropped($event)"
+        [maintainAspectRatio]="false"></image-cropper>
     </div>
     <div class="details">
         <ion-button *ngIf="!imageUrl else imageData" (click)="imageInput.click()">
@@ -55,6 +57,14 @@
       </div>
       <span class="flex-1 text-left">{{pixelCount}} px</span>
     </div>
+
+    <ion-button class="picker-button" expand="block" [fill]="showCropper ? 'solid' : 'outline'"
+      (click)="showCropper=!showCropper">
+      Crop Image
+    </ion-button>
+    <ion-button *ngIf="!showCropper" class="picker-button" expand="block" (click)="saveImage()">
+      Save Image
+    </ion-button>
   </ion-list>
 </ng-template>
 
@@ -62,4 +72,4 @@
        type="file"
        accept="image/*"
        hidden
-       (change)="processFile(imageInput)">
+       (change)="processFile($event, imageInput)">
