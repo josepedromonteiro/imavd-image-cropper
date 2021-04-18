@@ -1,0 +1,8 @@
+<div class="header" (click)="showContent=!showContent">
+  <ion-icon  [@toggleAnimation]="showContent" name="chevron-forward-outline"></ion-icon>
+  {{title}}
+</div>
+<div #content class="content" [@contentAnimation]="{value: showContent, params:{startHeight: startHeight}}">
+  <ng-content></ng-content>
+</div>
+<div class="line"></div>

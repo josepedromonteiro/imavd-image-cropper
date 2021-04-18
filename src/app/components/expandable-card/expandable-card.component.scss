@@ -1,0 +1,27 @@
+app-expandable-card {
+  .header {
+    display: flex;
+    font-weight: bold;
+    font-size: 18px;
+    align-items: center;
+    justify-content: flex-start;
+    cursor: pointer;
+    user-select: none;
+
+    ion-icon {
+      margin-right: 10px;
+    }
+  }
+
+  .content{
+    padding: 16px;
+  }
+
+  .line{
+    margin-top: 5px;
+    margin-bottom: 15px;
+    height: 2px;
+    width: 100%;
+    border: 1px solid rgba(var(--ion-background-color-rgb), .3);
+  }
+}

@@ -1,70 +1,74 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Image Editor
+      <b>IMAVD</b> Image Editor
     </ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="solid" color="primary" *ngIf="!showCropper" class="picker-button" expand="block" (click)="saveImage()">
+        Save Image
+        <ion-icon slot="end" name="cloud-download-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
 
-  <div id="container">
+  <div class="app-container">
     <div class="imagePreview" #imagePreview>
-<canvas #canvasElement (click)="clickColor($event)"></canvas>
-
-      <img #imageElement *ngIf="imageUrl&& !showCropper" [src]="imageUrl"  (load)="onImageLoad($event)"  />
-      <image-cropper *ngIf="showCropper" [imageChangedEvent]="imageChangedEvent" (imageCropped)="imageCropped($event)"
-        [maintainAspectRatio]="false"></image-cropper>
+      <app-canvas #appCanvas
+                  [pickColorActive]="pickColorActive"
+                  [showCropper]="showCropper"
+                  [imageUrl]="imageUrl"
+                  [imageChangedEvent]="imageChangedEvent"
+                  (nPixels)="pixelCount = $event"
+                  (onImageLoadEvent)="onImageLoad($event)">
+      </app-canvas>
     </div>
     <div class="details">
-        <ion-button *ngIf="!imageUrl else imageData" (click)="imageInput.click()">
-          Import image
-        </ion-button>
+      <ion-button *ngIf="!imageUrl else imageData" (click)="imageInput.click()">
+        Import image
+      </ion-button>
     </div>
   </div>
 </ion-content>
 
 <ng-template #imageData>
   <ion-list mode="ios" lines="none">
-    <ion-list-header>
-      Image Information
-    </ion-list-header>
-
-    <ion-item>
+    <app-expandable-card title="Image details">
       <ion-card>
         <ion-card-content>
           <app-card-item *ngFor="let item of imageMetadata" [item]="item">
           </app-card-item>
         </ion-card-content>
       </ion-card>
-    </ion-item>
+    </app-expandable-card>
 
-    <ion-list-header>
-      Pixel counter
-    </ion-list-header>
-    <ion-button class="picker-button" expand="block" [fill]="pickColorActive ? 'solid' : 'outline'" (click)="pickColorActive=!pickColorActive">
-      Pick color
-    </ion-button>
+    <app-expandable-card title="Pixel counter">
+      <ion-button class="picker-button" expand="block" [fill]="pickColorActive ? 'solid' : 'outline'"
+                  (click)="pickColorActive=!pickColorActive">
+        Pick color
+      </ion-button>
+      <div class="flex picker-info">
+        <div class="picker" [ngStyle]="{backgroundColor: pickedColor?.colorString}">
 
-    <div class="flex picker-info">
-      <div class="picker" [ngStyle]="{'background-color': pickedColor}">
-
+        </div>
+        <span class="flex-1 text-left">{{pixelCount}} px</span>
       </div>
-      <span class="flex-1 text-left">{{pixelCount}} px</span>
-    </div>
+    </app-expandable-card>
 
-    <ion-button class="picker-button" expand="block" [fill]="showCropper ? 'solid' : 'outline'"
-      (click)="showCropper=!showCropper">
-      Crop Image
-    </ion-button>
-    <ion-button *ngIf="!showCropper" class="picker-button" expand="block" (click)="saveImage()">
-      Save Image
-    </ion-button>
+
+    <app-expandable-card title="Crop Image">
+
+      <ion-button class="picker-button" expand="block"
+                  [fill]="(canvasActions.activeActions | async).includes(canvasActions.actions.CUTTING) ? 'solid' : 'outline'"
+                  (click)="canvasService.cropObject()">
+        Crop Image
+      </ion-button>
+      <ion-button *ngIf="(canvasActions.activeActions | async).includes(canvasActions.actions.CUTTING)" class="picker-button" expand="block" [fill]="'outline'">
+        Cancel
+      </ion-button>
+    </app-expandable-card>
   </ion-list>
 </ng-template>
 

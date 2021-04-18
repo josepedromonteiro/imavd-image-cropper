@@ -1,5 +1,5 @@
-// Adds ctx.getTransform() - returns an SVGMatrix
-// Adds ctx.transformedPoint(x,y) - returns an SVGPoint
+import { fabric } from 'fabric';
+
 function trackTransforms(ctx) {
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   let xform = svg.createSVGMatrix();
@@ -148,6 +148,11 @@ function drawImage(ctx, img, canvas) {
     img.width * ratio,
     img.height * ratio
   );
+
+  fabric.Image.fromURL('http://fabricjs.com/assets/pug_small.jpg', (myImg): void => {
+    const img1 = myImg.set({ left: 0, top: 0, width: 150, height: 150 });
+    canvas.add(img1);
+  });
 }
 
 

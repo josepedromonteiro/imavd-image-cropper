@@ -8,6 +8,8 @@ import { HomePageRoutingModule } from './home-routing.module';
 import { CardItemComponent } from '../components/card-item/card-item.component';
 
 import { ImageCropperModule } from 'ngx-image-cropper';
+import { CanvasModule } from '../components/canvas/canvas.module';
+import { ExpandableCardModule } from '../components/expandable-card/expandable-card.module';
 
 @NgModule({
   imports: [
@@ -15,7 +17,8 @@ import { ImageCropperModule } from 'ngx-image-cropper';
     FormsModule,
     IonicModule,
     HomePageRoutingModule,
-    ImageCropperModule
+    CanvasModule,
+    ExpandableCardModule
   ],
   declarations: [HomePage, CardItemComponent]
 })

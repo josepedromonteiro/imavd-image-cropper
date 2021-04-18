@@ -30,7 +30,37 @@
 @tailwind utilities;
 
 
+ion-button {
+  @extend .transition-all !optional;
+}
 
-ion-button{
-    @extend .transition-all!optional;
+.ngx-contextmenu.cdk-overlay-pane {
+  background-color: rgba(var(--ion-color-medium-rgb), .5);
+  backdrop-filter: blur(20px);
+  border-radius: 10px;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.2);
+  padding: 5px;
+  width: 250px;
+
+  li {
+    padding: 10px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+
+    &:hover {
+      background-color: rgba(var(--ion-background-color-rgb), .8);
+    }
+
+    a {
+      display: flex;
+      align-items: center;
+
+      ion-icon {
+        margin-right: 5px;
+      }
+    }
   }
+}
