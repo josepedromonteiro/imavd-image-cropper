@@ -110,11 +110,13 @@ export class HomePage implements AfterViewInit {
   }
 
   saveImage() {
-    const a = document.createElement('a');
-    a.href = this.imageUrl;
-    a.download = 'image.png';
+    const imageDownload = this.canvasService.mainImage.toDataURL()
 
-    a.click();
+    const a = document.createElement('a')
+    a.href = imageDownload
+    a.download = 'image.jpg'
+
+    a.click()
   }
 
   onPickedColor($event: Color) {
