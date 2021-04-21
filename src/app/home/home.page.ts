@@ -4,6 +4,7 @@ import { CanvasComponent } from '../components/canvas/canvas/canvas.component';
 import { CanvasService, Color, ColorClick } from '../components/canvas/canvas/canvas.service';
 import { throttleTime } from 'rxjs/operators';
 import { CanvasActionService } from '../components/canvas/canvas/canvas-actions.service';
+import { fabric } from 'fabric';
 
 @Component({
   selector: 'app-home',
@@ -29,6 +30,8 @@ export class HomePage implements AfterViewInit {
 
   showCropper = false;
   imageChangedEvent: any = '';
+
+  enabledFilters = [false, false, false, false]
 
   constructor(private changeRef: ChangeDetectorRef,
               private canvasService: CanvasService,
@@ -122,6 +125,44 @@ export class HomePage implements AfterViewInit {
   onPickedColor($event: Color) {
     this.pickedColor = $event;
     this.changeRef.markForCheck();
+  }
+
+  setSepiaFilter() {
+    this.canvasService.mainImage.filters = []
+
+    if (this.enabledFilters[0]) {
+      this.canvasService.mainImage.applyFilters()
+      this.canvasService.canvas.renderAll()
+
+      this.enabledFilters = [false, false, false, false]
+
+      return
+    }
+
+    this.canvasService.mainImage.filters.push(new fabric.Image.filters.Sepia())
+    this.canvasService.mainImage.applyFilters()
+    this.canvasService.canvas.renderAll()
+
+    this.enabledFilters = [true, false, false, false]
+  }
+
+  setRedifyFilter() {
+    this.canvasService.mainImage.filters = []
+
+    if (this.enabledFilters[1]) {
+      this.canvasService.mainImage.applyFilters()
+      this.canvasService.canvas.renderAll()
+
+      this.enabledFilters = [false, false, false, false]
+
+      return
+    }
+
+    this.canvasService.mainImage.filters.push(new fabric.Image.filters.Redify())
+    this.canvasService.mainImage.applyFilters()
+    this.canvasService.canvas.renderAll()
+
+    this.enabledFilters = [false, true, false, false]
   }
 }
 

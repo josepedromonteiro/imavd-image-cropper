@@ -90,11 +90,6 @@ export class CanvasService {
     fabric.Image.fromURL(imageUrl, (myImg): void => {
       this.mainImage = myImg;
       this.redifyImage();
-      this.mainImage.filters.push(
-        // new fabric.Image.filters.Redify(),
-        // new fabric.Image.filters.Sepia(),
-      );
-      this.mainImage.applyFilters();
       this.canvas?.add(this.mainImage);
       this.centerObject(this.mainImage);
       this.canvas?.setActiveObject(this.mainImage);

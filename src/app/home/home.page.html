@@ -69,6 +69,15 @@
         Cancel
       </ion-button>
     </app-expandable-card>
+
+    <app-expandable-card title="Filters">
+      <ion-button class="picker-button" expand="block" [fill]="enabledFilters[0] ? 'solid' : 'outline'" (click)="setSepiaFilter()">
+        Sepia
+      </ion-button>
+      <ion-button class="picker-button" expand="block" [fill]="enabledFilters[1] ? 'solid' : 'outline'" (click)="setRedifyFilter()">
+        Redify
+      </ion-button>
+    </app-expandable-card>
   </ion-list>
 </ng-template>
 
