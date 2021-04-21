@@ -35,7 +35,7 @@
 
 <ng-template #imageData>
   <ion-list mode="ios" lines="none">
-    <app-expandable-card title="Image details">
+    <app-expandable-card title="Image details" icon="information-circle-outline">
       <ion-card>
         <ion-card-content>
           <app-card-item *ngFor="let item of imageMetadata" [item]="item">
@@ -44,7 +44,7 @@
       </ion-card>
     </app-expandable-card>
 
-    <app-expandable-card title="Pixel counter">
+    <app-expandable-card title="Pixel counter" icon="color-filter-outline">
       <ion-button class="picker-button" expand="block" [fill]="pickColorActive ? 'solid' : 'outline'"
                   (click)="pickColorActive=!pickColorActive">
         Pick color
@@ -58,7 +58,7 @@
     </app-expandable-card>
 
 
-    <app-expandable-card title="Crop Image">
+    <app-expandable-card title="Crop Image" icon="crop">
 
       <ion-button class="picker-button" expand="block"
                   [fill]="(canvasActions.activeActions | async).includes(canvasActions.actions.CUTTING) ? 'solid' : 'outline'"

@@ -112,6 +112,7 @@ export class CanvasService {
     this.canvas.on('mouse:down', function(opt) {
       const evt = opt.e;
       if (evt.ctrlKey === true || evt.metaKey === true) {
+        evt.preventDefault();
         this.isDragging = true;
         this.selection = false;
         this.lastPosX = evt.clientX;
@@ -157,6 +158,7 @@ export class CanvasService {
         zoom = 0.1;
       }
       this.canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
+      console.log(this.canvas.getZoom()*100);
       opt.e.preventDefault();
       opt.e.stopPropagation();
     });
@@ -221,9 +223,11 @@ export class CanvasService {
   }
 
   public activateCrop(): void {
-    console.log(this.canvas.getActiveObject());
-
     const activeElement = this.canvas.getActiveObject();
+    if (!activeElement) {
+      // Show warning theres no active element
+      return;
+    }
     const cropDimensions = {
       height: activeElement.height * .7,
       width: activeElement.width * .7
@@ -242,16 +246,20 @@ export class CanvasService {
       height: cropDimensions.height
     });
     this.canvas.add(this.cutElement);
+    this.canvas.setActiveObject(this.cutElement);
     this.canvasAction.addAction(CANVAS_ACTIONS.CUTTING);
   }
 
   public cropObject(): void {
 
+    const canvasZoom: number = this.canvas.getZoom();
+    console.log(this.cutElement.getScaledWidth());
+    console.log(this.cutElement.getScaledWidth()*canvasZoom);
     const rect = new fabric.Rect({
       left: this.cutElement.left,
       top: this.cutElement.top,
-      width: this.cutElement.getScaledWidth(),
-      height: this.cutElement.getScaledHeight(),
+      width: this.cutElement.getScaledWidth() * canvasZoom,
+      height: this.cutElement.getScaledHeight() * canvasZoom,
       absolutePositioned: true
     });
 
@@ -262,8 +270,8 @@ export class CanvasService {
     const image = this.canvas.toDataURL({
       left: this.cutElement.left,
       top: this.cutElement.top,
-      width: this.cutElement.getScaledWidth(),
-      height: this.cutElement.getScaledHeight(),
+      width: this.cutElement.getScaledWidth() * canvasZoom,
+      height: this.cutElement.getScaledHeight() * canvasZoom,
       format: 'png'
     });
 
@@ -307,7 +315,7 @@ export class CanvasService {
     return nPixels;
   }
 
-  private centerObject(object: any): void{
+  private centerObject(object: any): void {
     this.canvas.centerObject(object);
     object.set('left', object.left - RIGHT_PADDING / 2);
   }
