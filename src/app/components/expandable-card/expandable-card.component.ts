@@ -26,6 +26,7 @@ export interface ExpandableCardData {
 export class ExpandableCardComponent implements OnInit{
 
   @Input() title: string = '';
+  @Input() icon: string = '';
   public showContent: boolean = true;
   public startHeight: number = 0;
   @ViewChild('content') public content: ElementRef<HTMLDivElement>;

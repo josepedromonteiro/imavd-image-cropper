@@ -49,7 +49,7 @@ interface ImageOptions {
   height?: number;
 }
 
-const RIGHT_PADDING: number = 350;
+const RIGHT_PADDING = 350;
 
 @Injectable({
   providedIn: 'root'
@@ -107,6 +107,7 @@ export class CanvasService {
     this.canvas.on('mouse:down', function(opt) {
       const evt = opt.e;
       if (evt.ctrlKey === true || evt.metaKey === true) {
+        evt.preventDefault();
         this.isDragging = true;
         this.selection = false;
         this.lastPosX = evt.clientX;
@@ -216,9 +217,11 @@ export class CanvasService {
   }
 
   public activateCrop(): void {
-    console.log(this.canvas.getActiveObject());
-
     const activeElement = this.canvas.getActiveObject();
+    if (!activeElement) {
+      // Show warning theres no active element
+      return;
+    }
     const cropDimensions = {
       height: activeElement.height * .7,
       width: activeElement.width * .7
@@ -237,23 +240,14 @@ export class CanvasService {
       height: cropDimensions.height
     });
     this.canvas.add(this.cutElement);
+    this.canvas.setActiveObject(this.cutElement);
     this.canvasAction.addAction(CANVAS_ACTIONS.CUTTING);
   }
 
   public cropObject(): void {
 
-    const rect = new fabric.Rect({
-      left: this.cutElement.left,
-      top: this.cutElement.top,
-      width: this.cutElement.getScaledWidth(),
-      height: this.cutElement.getScaledHeight(),
-      absolutePositioned: true
-    });
-
-    console.log(rect);
-
-    this.cutElement.set('stroke', 'transparent');
-
+    const transform: number[] = this.canvas.viewportTransform.slice();
+    this.canvas.viewportTransform = [1, 0, 0, 1, 0, 0];
     const image = this.canvas.toDataURL({
       left: this.cutElement.left,
       top: this.cutElement.top,
@@ -261,10 +255,10 @@ export class CanvasService {
       height: this.cutElement.getScaledHeight(),
       format: 'png'
     });
+    this.canvas.viewportTransform = transform;
 
     this.addImageToCanvas(image);
 
-    this.mainImage.clipPath = rect;
     this.mainImage.selectable = true;
     this.canvas.setActiveObject(this.mainImage);
     this.canvas.remove(this.cutElement);
@@ -302,7 +296,7 @@ export class CanvasService {
     return nPixels;
   }
 
-  private centerObject(object: any): void{
+  private centerObject(object: any): void {
     this.canvas.centerObject(object);
     object.set('left', object.left - RIGHT_PADDING / 2);
   }
