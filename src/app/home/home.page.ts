@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, ViewChild, ViewEncapsulation, } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, ViewChild, ViewEncapsulation, } from '@angular/core';
 import { CardItem } from '../components/card-item/card-item.component';
 import { CanvasComponent } from '../components/canvas/canvas/canvas.component';
 import { CanvasService, Color, ColorClick } from '../components/canvas/canvas/canvas.service';
@@ -31,7 +31,7 @@ export class HomePage implements AfterViewInit {
   showCropper = false;
   imageChangedEvent: any = '';
 
-  enabledFilters = [false, false, false, false]
+  enabledFilters = [false, false, false, false];
 
   constructor(private changeRef: ChangeDetectorRef,
               private canvasService: CanvasService,
@@ -113,13 +113,13 @@ export class HomePage implements AfterViewInit {
   }
 
   saveImage() {
-    const imageDownload = this.canvasService.mainImage.toDataURL()
+    const imageDownload = this.canvasService.mainImage.toDataURL();
 
-    const a = document.createElement('a')
-    a.href = imageDownload
-    a.download = 'image.jpg'
+    const a = document.createElement('a');
+    a.href = imageDownload;
+    a.download = 'image.jpg';
 
-    a.click()
+    a.click();
   }
 
   onPickedColor($event: Color) {
@@ -128,41 +128,27 @@ export class HomePage implements AfterViewInit {
   }
 
   setSepiaFilter() {
-    this.canvasService.mainImage.filters = []
-
-    if (this.enabledFilters[0]) {
-      this.canvasService.mainImage.applyFilters()
-      this.canvasService.canvas.renderAll()
-
-      this.enabledFilters = [false, false, false, false]
-
-      return
-    }
-
-    this.canvasService.mainImage.filters.push(new fabric.Image.filters.Sepia())
-    this.canvasService.mainImage.applyFilters()
-    this.canvasService.canvas.renderAll()
-
-    this.enabledFilters = [true, false, false, false]
+    this.canvasService.setSepiaFilter(!this.canvasService?.mainImage?.filters[1]);
   }
 
   setRedifyFilter() {
-    this.canvasService.mainImage.filters = []
+    this.canvasService.setRedifyFilter(!this.canvasService?.mainImage?.filters[0]);
+  }
 
-    if (this.enabledFilters[1]) {
-      this.canvasService.mainImage.applyFilters()
-      this.canvasService.canvas.renderAll()
+  setBrightness(value: CustomEvent): void {
+    const brightness: number = value.detail.value / 255;
+    this.canvasService.setBrightness(brightness);
+  }
 
-      this.enabledFilters = [false, false, false, false]
 
-      return
-    }
+  setContrast(value: CustomEvent): void{
+    const contrast: number = value.detail.value / 255;
+    this.canvasService.setContrast(contrast);
+  }
 
-    this.canvasService.mainImage.filters.push(new fabric.Image.filters.Redify())
-    this.canvasService.mainImage.applyFilters()
-    this.canvasService.canvas.renderAll()
-
-    this.enabledFilters = [false, true, false, false]
+  setGamma(value: CustomEvent): void{
+    const gamma: number = value.detail.value;
+    this.canvasService.setGamma(gamma);
   }
 }
 

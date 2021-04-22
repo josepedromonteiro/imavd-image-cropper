@@ -247,6 +247,7 @@ export class CanvasService {
   public cropObject(): void {
 
     const transform: number[] = this.canvas.viewportTransform.slice();
+    this.cutElement.set('stroke', 'transparent');
     this.canvas.viewportTransform = [1, 0, 0, 1, 0, 0];
     const image = this.canvas.toDataURL({
       left: this.cutElement.left,
@@ -266,6 +267,58 @@ export class CanvasService {
 
 
     this.canvas?.remove(this.canvas.getObjects()[0]);
+  }
+
+
+  // [redify, sepia, brightness, contrast]
+  // this.canvasService.mainImage.filters = [];
+
+  public setRedifyFilter(activate: boolean): void {
+    this.checkFilters();
+    this.mainImage.filters[0] = activate ? new fabric.Image.filters.Redify() : null;
+    this.applyFilters();
+  }
+
+  public setSepiaFilter(activate: boolean): void {
+    this.checkFilters();
+    this.mainImage.filters[1] = activate ? new fabric.Image.filters.Sepia() : null;
+    this.applyFilters();
+  }
+
+  public setBrightness(value: number): void {
+    this.checkFilters();
+    this.mainImage.filters[2] = new fabric.Image.filters.Brightness({
+      brightness: value || 0
+    });
+    this.applyFilters();
+  }
+
+  public setContrast(value: number): void {
+    this.checkFilters();
+    this.mainImage.filters[3] = new fabric.Image.filters.Contrast({
+      contrast: value || 0
+    });
+    this.applyFilters();
+  }
+
+  public setGamma(value: number): void {
+    console.log(value);
+    this.checkFilters();
+    this.mainImage.filters[4] = new fabric.Image.filters.Gamma({
+      gamma: [value, value, value] || [1, 1, 1]
+    });
+    this.applyFilters();
+  }
+
+  private checkFilters(): void {
+    if (!this.mainImage.filters) {
+      this.mainImage.filters = [];
+    }
+  }
+
+  private applyFilters(): void {
+    this.mainImage.applyFilters();
+    this.canvas.renderAll();
   }
 
   private calculateNumberOfPixels(color: RGBA): number {
