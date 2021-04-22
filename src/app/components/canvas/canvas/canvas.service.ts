@@ -49,7 +49,7 @@ interface ImageOptions {
   height?: number;
 }
 
-const RIGHT_PADDING: number = 350;
+const RIGHT_PADDING = 350;
 
 @Injectable({
   providedIn: 'root'
@@ -158,7 +158,6 @@ export class CanvasService {
         zoom = 0.1;
       }
       this.canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
-      console.log(this.canvas.getZoom()*100);
       opt.e.preventDefault();
       opt.e.stopPropagation();
     });
@@ -252,32 +251,19 @@ export class CanvasService {
 
   public cropObject(): void {
 
-    const canvasZoom: number = this.canvas.getZoom();
-    console.log(this.cutElement.getScaledWidth());
-    console.log(this.cutElement.getScaledWidth()*canvasZoom);
-    const rect = new fabric.Rect({
-      left: this.cutElement.left,
-      top: this.cutElement.top,
-      width: this.cutElement.getScaledWidth() * canvasZoom,
-      height: this.cutElement.getScaledHeight() * canvasZoom,
-      absolutePositioned: true
-    });
-
-    console.log(rect);
-
-    this.cutElement.set('stroke', 'transparent');
-
+    const transform: number[] = this.canvas.viewportTransform.slice();
+    this.canvas.viewportTransform = [1, 0, 0, 1, 0, 0];
     const image = this.canvas.toDataURL({
       left: this.cutElement.left,
       top: this.cutElement.top,
-      width: this.cutElement.getScaledWidth() * canvasZoom,
-      height: this.cutElement.getScaledHeight() * canvasZoom,
+      width: this.cutElement.getScaledWidth(),
+      height: this.cutElement.getScaledHeight(),
       format: 'png'
     });
+    this.canvas.viewportTransform = transform;
 
     this.addImageToCanvas(image);
 
-    this.mainImage.clipPath = rect;
     this.mainImage.selectable = true;
     this.canvas.setActiveObject(this.mainImage);
     this.canvas.remove(this.cutElement);
