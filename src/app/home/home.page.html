@@ -4,7 +4,8 @@
       <b>IMAVD</b> Image Editor
     </ion-title>
     <ion-buttons slot="end">
-      <ion-button fill="solid" color="primary" *ngIf="!showCropper" class="picker-button" expand="block" (click)="saveImage()">
+      <ion-button fill="solid" color="primary" *ngIf="!showCropper" class="picker-button" expand="block"
+                  (click)="saveImage()">
         Save Image
         <ion-icon slot="end" name="cloud-download-outline"></ion-icon>
       </ion-button>
@@ -44,6 +45,15 @@
       </ion-card>
     </app-expandable-card>
 
+    <app-expandable-card title="Image details" icon="information-circle-outline">
+      <ion-button class="picker-button" expand="block" fill="outline" (click)="flipHorizontally()">
+        Flip horizontally
+      </ion-button>
+      <ion-button class="picker-button" expand="block" fill="outline" (click)="flipVertically()">
+        Flip vertically
+      </ion-button>
+    </app-expandable-card>
+
     <app-expandable-card title="Pixel counter" icon="color-wand-outline">
       <ion-button class="picker-button" expand="block" [fill]="pickColorActive ? 'solid' : 'outline'"
                   (click)="pickColorActive=!pickColorActive">
@@ -65,17 +75,32 @@
                   (click)="canvasService.cropObject()">
         Crop Image
       </ion-button>
-      <ion-button *ngIf="(canvasActions.activeActions | async).includes(canvasActions.actions.CUTTING)" class="picker-button" expand="block" [fill]="'outline'">
+      <ion-button *ngIf="(canvasActions.activeActions | async).includes(canvasActions.actions.CUTTING)"
+                  class="picker-button" expand="block" [fill]="'outline'">
         Cancel
       </ion-button>
     </app-expandable-card>
 
     <app-expandable-card title="Filters" icon="color-filter-outline">
-      <ion-button class="picker-button" expand="block" [fill]="canvasService?.mainImage?.filters[1] ? 'solid' : 'outline'" (click)="setSepiaFilter()">
+      <ion-button color="warning" class="picker-button" expand="block"
+                  [fill]="canvasService?.mainImage?.filters[1] ? 'solid' : 'outline'" (click)="setSepiaFilter()">
         Sepia
       </ion-button>
-      <ion-button class="picker-button" expand="block" [fill]="canvasService?.mainImage?.filters[0] ? 'solid' : 'outline'" (click)="setRedifyFilter()">
+      <ion-button color="dark" class="picker-button" expand="block"
+                  [fill]="canvasService?.mainImage?.filters[7] ? 'solid' : 'outline'" (click)="setInvertFilter()">
+        Invert colors
+      </ion-button>
+      <ion-button color="danger" class="picker-button" expand="block"
+                  [fill]="canvasService?.mainImage?.filters[0] ? 'solid' : 'outline'" (click)="setRedifyFilter()">
         Redify
+      </ion-button>
+      <ion-button color="secondary" class="picker-button" expand="block"
+                  [fill]="canvasService?.mainImage?.filters[5] ? 'solid' : 'outline'" (click)="setBluefyFilter()">
+        Bluefy
+      </ion-button>
+      <ion-button color="success" class="picker-button" expand="block"
+                  [fill]="canvasService?.mainImage?.filters[6] ? 'solid' : 'outline'" (click)="setGreenfyFilter()">
+        Greenfy
       </ion-button>
     </app-expandable-card>
 

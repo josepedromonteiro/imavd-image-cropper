@@ -4,7 +4,6 @@ import { CanvasComponent } from '../components/canvas/canvas/canvas.component';
 import { CanvasService, Color, ColorClick } from '../components/canvas/canvas/canvas.service';
 import { throttleTime } from 'rxjs/operators';
 import { CanvasActionService } from '../components/canvas/canvas/canvas-actions.service';
-import { fabric } from 'fabric';
 
 @Component({
   selector: 'app-home',
@@ -131,8 +130,20 @@ export class HomePage implements AfterViewInit {
     this.canvasService.setSepiaFilter(!this.canvasService?.mainImage?.filters[1]);
   }
 
+  setInvertFilter() {
+    this.canvasService.setInvert(!this.canvasService?.mainImage?.filters[7]);
+  }
+
   setRedifyFilter() {
     this.canvasService.setRedifyFilter(!this.canvasService?.mainImage?.filters[0]);
+  }
+
+  setBluefyFilter() {
+    this.canvasService.setBluefyFilter(!this.canvasService?.mainImage?.filters[5]);
+  }
+
+  setGreenfyFilter() {
+    this.canvasService.setGreenfyFilter(!this.canvasService?.mainImage?.filters[6]);
   }
 
   setBrightness(value: CustomEvent): void {
@@ -140,15 +151,22 @@ export class HomePage implements AfterViewInit {
     this.canvasService.setBrightness(brightness);
   }
 
-
-  setContrast(value: CustomEvent): void{
+  setContrast(value: CustomEvent): void {
     const contrast: number = value.detail.value / 255;
     this.canvasService.setContrast(contrast);
   }
 
-  setGamma(value: CustomEvent): void{
+  setGamma(value: CustomEvent): void {
     const gamma: number = value.detail.value;
     this.canvasService.setGamma(gamma);
+  }
+
+  flipVertically(): void {
+    this.canvasService.flipVertically(!this.canvasService.mainImage.flipY);
+  }
+
+  flipHorizontally(): void {
+    this.canvasService.flipHorizontally(!this.canvasService.mainImage.flipX);
   }
 }
 

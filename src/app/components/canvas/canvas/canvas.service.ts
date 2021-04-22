@@ -90,6 +90,8 @@ export class CanvasService {
     fabric.Image.fromURL(imageUrl, (myImg): void => {
       this.mainImage = myImg;
       this.redifyImage();
+      this.greenfyImage();
+      this.bluefyImage();
       this.canvas?.add(this.mainImage);
       this.centerObject(this.mainImage);
       this.canvas?.setActiveObject(this.mainImage);
@@ -192,6 +194,75 @@ export class CanvasService {
     fabric.Image.filters.Redify.fromObject = fabric.Image.filters.BaseFilter.fromObject;
   }
 
+
+  public bluefyImage(): void {
+    fabric.Image.filters.Bluefy = fabric.util.createClass(fabric.Image.filters.BaseFilter, {
+
+      type: 'Bluefy',
+
+      /**
+       * Fragment source for the redify program
+       */
+      fragmentSource: 'precision highp float;\n' +
+        'uniform sampler2D uTexture;\n' +
+        'varying vec2 vTexCoord;\n' +
+        'void main() {\n' +
+        'vec4 color = texture2D(uTexture, vTexCoord);\n' +
+        'color.g = 0.0;\n' +
+        'color.r = 0.0;\n' +
+        'gl_FragColor = color;\n' +
+        '}',
+
+      applyTo2d: options => {
+        const imageData = options.imageData;
+        const data = imageData.data;
+        const len = data.length;
+
+        for (let i = 0; i < len; i += 4) {
+          data[i] = 0;
+          data[i + 1] = 0;
+        }
+
+      }
+    });
+
+    fabric.Image.filters.Bluefy.fromObject = fabric.Image.filters.BaseFilter.fromObject;
+  }
+
+  public greenfyImage(): void {
+    fabric.Image.filters.Greenfy = fabric.util.createClass(fabric.Image.filters.BaseFilter, {
+
+      type: 'Greenfy',
+
+      /**
+       * Fragment source for the redify program
+       */
+      fragmentSource: 'precision highp float;\n' +
+        'uniform sampler2D uTexture;\n' +
+        'varying vec2 vTexCoord;\n' +
+        'void main() {\n' +
+        'vec4 color = texture2D(uTexture, vTexCoord);\n' +
+        'color.r = 0.0;\n' +
+        'color.b = 0.0;\n' +
+        'gl_FragColor = color;\n' +
+        '}',
+
+      applyTo2d: options => {
+        const imageData = options.imageData;
+        const data = imageData.data;
+        const len = data.length;
+
+        for (let i = 0; i < len; i += 4) {
+          data[i] = 0;
+          data[i + 2] = 0;
+        }
+
+      }
+    });
+
+    fabric.Image.filters.Greenfy.fromObject = fabric.Image.filters.BaseFilter.fromObject;
+  }
+
   public colorMouseMove(e): void {
     const x: number = e.offsetX || e.layerX || e.pointer.x;
     const y: number = e.offsetY || e.layerY || e.pointer.y;
@@ -270,7 +341,7 @@ export class CanvasService {
   }
 
 
-  // [redify, sepia, brightness, contrast]
+  // [redify, sepia, brightness, contrast, gamma,bluefy, greenfy, invert]
   // this.canvasService.mainImage.filters = [];
 
   public setRedifyFilter(activate: boolean): void {
@@ -279,9 +350,27 @@ export class CanvasService {
     this.applyFilters();
   }
 
+  public setBluefyFilter(activate: boolean): void {
+    this.checkFilters();
+    this.mainImage.filters[5] = activate ? new fabric.Image.filters.Bluefy() : null;
+    this.applyFilters();
+  }
+
+  public setGreenfyFilter(activate: boolean): void {
+    this.checkFilters();
+    this.mainImage.filters[6] = activate ? new fabric.Image.filters.Greenfy() : null;
+    this.applyFilters();
+  }
+
   public setSepiaFilter(activate: boolean): void {
     this.checkFilters();
     this.mainImage.filters[1] = activate ? new fabric.Image.filters.Sepia() : null;
+    this.applyFilters();
+  }
+
+  public setInvert(activate: boolean): void {
+    this.checkFilters();
+    this.mainImage.filters[7] = activate ? new fabric.Image.filters.Invert() : null;
     this.applyFilters();
   }
 
@@ -302,12 +391,20 @@ export class CanvasService {
   }
 
   public setGamma(value: number): void {
-    console.log(value);
-    this.checkFilters();
     this.mainImage.filters[4] = new fabric.Image.filters.Gamma({
       gamma: [value, value, value] || [1, 1, 1]
     });
     this.applyFilters();
+  }
+
+  public flipVertically(value: boolean): void {
+    this.mainImage.set('flipY', value);
+    this.canvas.renderAll();
+  }
+
+  public flipHorizontally(value: boolean): void {
+    this.mainImage.set('flipX', value);
+    this.canvas.renderAll();
   }
 
   private checkFilters(): void {
