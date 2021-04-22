@@ -64,3 +64,23 @@ ion-button {
     }
   }
 }
+
+/* width */
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #303030;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #212121;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #151515;
+}
