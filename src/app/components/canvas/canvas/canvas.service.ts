@@ -341,7 +341,6 @@ export class CanvasService {
   }
 
 
-  // [redify, sepia, brightness, contrast, gamma,bluefy, greenfy, invert]
   // this.canvasService.mainImage.filters = [];
 
   public setRedifyFilter(activate: boolean): void {
@@ -397,6 +396,14 @@ export class CanvasService {
     this.applyFilters();
   }
 
+  public setBackgroundColor(color: string, intensity: number): void {
+    this.mainImage.filters[8] = new fabric.Image.filters.RemoveColor({
+      distance: intensity / 100 || 0,
+      color: color || '#ffffff'
+    });
+    this.applyFilters();
+  }
+
   public flipVertically(value: boolean): void {
     this.mainImage.set('flipY', value);
     this.canvas.renderAll();
@@ -409,6 +416,7 @@ export class CanvasService {
 
   private checkFilters(): void {
     if (!this.mainImage.filters) {
+      // [redify, sepia, brightness, contrast, gamma,bluefy, greenfy, invert, removecolor]
       this.mainImage.filters = [];
     }
   }

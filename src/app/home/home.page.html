@@ -26,104 +26,137 @@
                   (onImageLoadEvent)="onImageLoad($event)">
       </app-canvas>
     </div>
-    <div class="details">
+
+
+    <div class="details"><ion-segment mode="ios" class="tabs" [(ngModel)]="activeTab">
+      <ion-segment-button value="general">
+        <ion-label>General</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="colors">
+        <ion-label>Colors</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+      <div class="details-container">
       <ion-button *ngIf="!imageUrl else imageData" (click)="imageInput.click()">
         Import image
       </ion-button>
+      </div>
     </div>
   </div>
 </ion-content>
 
 <ng-template #imageData>
+
   <ion-list mode="ios" lines="none">
-    <app-expandable-card title="Image details" icon="information-circle-outline">
-      <ion-card>
-        <ion-card-content>
-          <app-card-item *ngFor="let item of imageMetadata" [item]="item">
-          </app-card-item>
-        </ion-card-content>
-      </ion-card>
-    </app-expandable-card>
-
-    <app-expandable-card title="Image resize" icon="information-circle-outline">
-      <ion-button class="picker-button" expand="block" fill="outline" (click)="flipHorizontally()">
-        Flip horizontally
-      </ion-button>
-      <ion-button class="picker-button" expand="block" fill="outline" (click)="flipVertically()">
-        Flip vertically
-      </ion-button>
-    </app-expandable-card>
-
-    <app-expandable-card title="Pixel counter" icon="color-wand-outline">
-      <ion-button class="picker-button" expand="block" [fill]="pickColorActive ? 'solid' : 'outline'"
-                  (click)="pickColorActive=!pickColorActive">
-        Pick color
-      </ion-button>
-      <div class="flex picker-info">
-        <div class="picker" [ngStyle]="{backgroundColor: pickedColor?.colorString}">
-
-        </div>
-        <span class="flex-1 text-left">{{pixelCount}} px</span>
-      </div>
-    </app-expandable-card>
-
-
-    <app-expandable-card title="Crop Image" icon="crop">
-
-      <ion-button class="picker-button" expand="block"
-                  [fill]="(canvasActions.activeActions | async).includes(canvasActions.actions.CUTTING) ? 'solid' : 'outline'"
-                  (click)="canvasService.cropObject()">
-        Crop Image
-      </ion-button>
-      <ion-button *ngIf="(canvasActions.activeActions | async).includes(canvasActions.actions.CUTTING)"
-                  class="picker-button" expand="block" [fill]="'outline'">
-        Cancel
-      </ion-button>
-    </app-expandable-card>
-
-    <app-expandable-card title="Filters" icon="color-filter-outline">
-      <ion-button color="warning" class="picker-button" expand="block"
-                  [fill]="canvasService?.mainImage?.filters[1] ? 'solid' : 'outline'" (click)="setSepiaFilter()">
-        Sepia
-      </ion-button>
-      <ion-button color="dark" class="picker-button" expand="block"
-                  [fill]="canvasService?.mainImage?.filters[7] ? 'solid' : 'outline'" (click)="setInvertFilter()">
-        Invert colors
-      </ion-button>
-      <ion-button color="danger" class="picker-button" expand="block"
-                  [fill]="canvasService?.mainImage?.filters[0] ? 'solid' : 'outline'" (click)="setRedifyFilter()">
-        Redify
-      </ion-button>
-      <ion-button color="secondary" class="picker-button" expand="block"
-                  [fill]="canvasService?.mainImage?.filters[5] ? 'solid' : 'outline'" (click)="setBluefyFilter()">
-        Bluefy
-      </ion-button>
-      <ion-button color="success" class="picker-button" expand="block"
-                  [fill]="canvasService?.mainImage?.filters[6] ? 'solid' : 'outline'" (click)="setGreenfyFilter()">
-        Greenfy
-      </ion-button>
-    </app-expandable-card>
-
-    <app-expandable-card title="Color adjustments" icon="color-fill-outline">
-      <h2>Brightness</h2>
-      <ion-range min="-255" max="255" pin (ionChange)="setBrightness($event)">
-        <ion-icon slot="start" size="small" name="sunny-outline"></ion-icon>
-        <ion-icon slot="end" name="sunny-outline"></ion-icon>
-      </ion-range>
-
-      <h2>Contrast</h2>
-      <ion-range min="-255" max="255" pin (ionChange)="setContrast($event)">
-        <ion-icon slot="start" size="small" name="contrast"></ion-icon>
-        <ion-icon slot="end" name="contrast"></ion-icon>
-      </ion-range>
-
-      <h2>Gama</h2>
-      <ion-range min=".1" max="2.2" step=".1" pin (ionChange)="setGamma($event)">
-        <ion-icon slot="start" size="small" name="color-filter-outline"></ion-icon>
-        <ion-icon slot="end" name="color-filter-outline"></ion-icon>
-      </ion-range>
-    </app-expandable-card>
+    <ng-container [ngSwitch]="activeTab">
+      <ng-container *ngSwitchCase="'general'" [ngTemplateOutlet]="details"></ng-container>
+      <ng-container *ngSwitchCase="'colors'" [ngTemplateOutlet]="colors"></ng-container>
+    </ng-container>
   </ion-list>
+</ng-template>
+
+<ng-template #details>
+  <app-expandable-card title="Image details" icon="information-circle-outline">
+    <ion-card>
+      <ion-card-content>
+        <app-card-item *ngFor="let item of imageMetadata" [item]="item">
+        </app-card-item>
+      </ion-card-content>
+    </ion-card>
+  </app-expandable-card>
+  <app-expandable-card title="Image resize" icon="information-circle-outline">
+    <ion-button class="picker-button" expand="block" fill="outline" (click)="flipHorizontally()">
+      Flip horizontally
+    </ion-button>
+    <ion-button class="picker-button" expand="block" fill="outline" (click)="flipVertically()">
+      Flip vertically
+    </ion-button>
+  </app-expandable-card>
+  <app-expandable-card title="Crop Image" icon="crop">
+
+    <ion-button class="picker-button" expand="block"
+                [fill]="(canvasActions.activeActions | async).includes(canvasActions.actions.CUTTING) ? 'solid' : 'outline'"
+                (click)="canvasService.cropObject()">
+      Crop Image
+    </ion-button>
+    <ion-button *ngIf="(canvasActions.activeActions | async).includes(canvasActions.actions.CUTTING)"
+                class="picker-button" expand="block" [fill]="'outline'">
+      Cancel
+    </ion-button>
+  </app-expandable-card>
+</ng-template>
+
+<ng-template #colors>
+  <app-expandable-card title="Remove color" icon="image-outline">
+    <div class="item">
+      <ion-label>Color</ion-label>
+      <div class="input-container">
+        <input class="color-input" type="color" [(ngModel)]="variables.remove_color.color">
+      </div>
+    </div>
+
+    <div class="item">
+      <ion-label>Intensity</ion-label>
+      <ion-range min="0" max="100" [(ngModel)]="variables.remove_color.intensity" (ionChange)="backgroundColorIntensityChange()">
+      </ion-range>
+      <ion-note class="color-note">
+        {{variables.remove_color.intensity}}
+      </ion-note>
+    </div>
+  </app-expandable-card>
+  <app-expandable-card title="Color counter" icon="color-wand-outline">
+    <ion-button class="picker-button" expand="block" [fill]="pickColorActive ? 'solid' : 'outline'"
+                (click)="pickColorActive=!pickColorActive">
+      Pick color
+    </ion-button>
+    <div class="flex picker-info">
+      <div class="picker" [ngStyle]="{backgroundColor: pickedColor?.colorString}">
+
+      </div>
+      <span class="flex-1 text-left">{{pixelCount}} px</span>
+    </div>
+  </app-expandable-card>
+  <app-expandable-card title="Filters" icon="color-filter-outline">
+    <ion-button color="warning" class="picker-button" expand="block"
+                [fill]="canvasService?.mainImage?.filters[1] ? 'solid' : 'outline'" (click)="setSepiaFilter()">
+      Sepia
+    </ion-button>
+    <ion-button color="dark" class="picker-button" expand="block"
+                [fill]="canvasService?.mainImage?.filters[7] ? 'solid' : 'outline'" (click)="setInvertFilter()">
+      Invert colors
+    </ion-button>
+    <ion-button color="danger" class="picker-button" expand="block"
+                [fill]="canvasService?.mainImage?.filters[0] ? 'solid' : 'outline'" (click)="setRedifyFilter()">
+      Redify
+    </ion-button>
+    <ion-button color="secondary" class="picker-button" expand="block"
+                [fill]="canvasService?.mainImage?.filters[5] ? 'solid' : 'outline'" (click)="setBluefyFilter()">
+      Bluefy
+    </ion-button>
+    <ion-button color="success" class="picker-button" expand="block"
+                [fill]="canvasService?.mainImage?.filters[6] ? 'solid' : 'outline'" (click)="setGreenfyFilter()">
+      Greenfy
+    </ion-button>
+  </app-expandable-card>
+  <app-expandable-card title="Color adjustments" icon="color-fill-outline">
+    <h2>Brightness</h2>
+    <ion-range min="-255" max="255" pin (ionChange)="setBrightness($event)">
+      <ion-icon slot="start" size="small" name="sunny-outline"></ion-icon>
+      <ion-icon slot="end" name="sunny-outline"></ion-icon>
+    </ion-range>
+
+    <h2>Contrast</h2>
+    <ion-range min="-255" max="255" pin (ionChange)="setContrast($event)">
+      <ion-icon slot="start" size="small" name="contrast"></ion-icon>
+      <ion-icon slot="end" name="contrast"></ion-icon>
+    </ion-range>
+
+    <h2>Gama</h2>
+    <ion-range min=".1" max="2.2" step=".1" pin (ionChange)="setGamma($event)">
+      <ion-icon slot="start" size="small" name="color-filter-outline"></ion-icon>
+      <ion-icon slot="end" name="color-filter-outline"></ion-icon>
+    </ion-range>
+  </app-expandable-card>
 </ng-template>
 
 <input #imageInput

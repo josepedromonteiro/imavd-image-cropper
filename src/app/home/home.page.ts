@@ -5,6 +5,8 @@ import { CanvasService, Color, ColorClick } from '../components/canvas/canvas/ca
 import { throttleTime } from 'rxjs/operators';
 import { CanvasActionService } from '../components/canvas/canvas/canvas-actions.service';
 
+export type Tabs = 'general' | 'colors';
+
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -26,11 +28,23 @@ export class HomePage implements AfterViewInit {
   // public imageUrl = '';
   public imageUrl = 'assets/shapes.svg';
   public imageMetadata: CardItem[] = [];
+  public activeTab: Tabs = 'colors';
 
   showCropper = false;
   imageChangedEvent: any = '';
 
-  enabledFilters = [false, false, false, false];
+
+  public variables: {
+    remove_color?: {
+      intensity?: number,
+      color?: string;
+    }
+  } = {
+    remove_color: {
+      intensity: 0,
+      color: '#ffffff'
+    }
+  };
 
   constructor(private changeRef: ChangeDetectorRef,
               private canvasService: CanvasService,
@@ -111,6 +125,11 @@ export class HomePage implements AfterViewInit {
     });
   }
 
+  public changeTab(value: Tabs): void {
+    console.log(value);
+    this.activeTab = value;
+  }
+
   saveImage() {
     const imageDownload = this.canvasService.mainImage.toDataURL();
 
@@ -167,6 +186,10 @@ export class HomePage implements AfterViewInit {
 
   flipHorizontally(): void {
     this.canvasService.flipHorizontally(!this.canvasService.mainImage.flipX);
+  }
+
+  backgroundColorIntensityChange(): void {
+    this.canvasService.setBackgroundColor(this.variables?.remove_color?.color, this.variables?.remove_color?.intensity);
   }
 }
 
