@@ -84,3 +84,10 @@ ion-button {
 ::-webkit-scrollbar-thumb:hover {
   background: #151515;
 }
+
+.electron.mac-os{
+  ion-toolbar{
+    --padding-top: 35px;
+    padding-bottom: 15px;
+  }
+}

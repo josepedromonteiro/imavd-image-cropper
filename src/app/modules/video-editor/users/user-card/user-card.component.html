@@ -1,0 +1,11 @@
+<div class="user-card" *ngIf="user">
+  <div class="header">
+    <div class="avatar">
+      <img [src]="user.photo">
+    </div>
+    <h1 class="name">
+      {{user.name}}
+    </h1>
+  </div>
+  <div class="content" [innerHTML]="user.cv"></div>
+</div>

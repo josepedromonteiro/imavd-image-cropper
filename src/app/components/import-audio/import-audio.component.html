@@ -1,0 +1,6 @@
+<div class="audio">
+  <h2>Audio player</h2>
+  <ion-button (click)="audio.click()">Import file</ion-button>
+  <input #audio type="file" accept="audio/*" hidden (change)="playAudio($event)">
+  <ngx-audio-player [playlist]="audioPlaylist" *ngIf="audioPlaylist.length > 0"></ngx-audio-player>
+</div>

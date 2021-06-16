@@ -2,8 +2,6 @@
   <canvas id="fabric-canvas" #canvasElement  (click)="clickColor($event)"></canvas>
 </div>
 <img #imageElement *ngIf="imageUrl && !showCropper" [src]="imageUrl" (load)="onImageLoad($event)" />
-<!--<image-cropper *ngIf="showCropper" [imageChangedEvent]="imageChangedEvent" (imageCropped)="imageCropped($event)"-->
-<!--               [maintainAspectRatio]="false"></image-cropper>-->
 <context-menu #contextMenuChild>
   <ng-container *ngFor="let item of canvasService.items">
     <ng-template contextMenuItem (execute)="item.onClick()">

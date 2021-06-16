@@ -1,0 +1,24 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      <b>IMAVD</b> Face recognition
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="video-container">
+    <div class="media-area" #mediaArea>
+      <video autoplay="true" #videoElement class="video" (loadedmetadata)="onLoadedVideoMetadata($event)"></video>
+    </div>
+    <div class="users">
+      <app-user-card [user]="userIdentified">
+
+      </app-user-card>
+    </div>
+  </div>
+  <div class="video-container-bg">
+    <div class="overlay"></div>
+    <video autoplay="true" #videoElementBg class="video-bg"></video>
+  </div>
+</ion-content>

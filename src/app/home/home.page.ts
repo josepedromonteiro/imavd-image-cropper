@@ -1,9 +1,11 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, ViewChild, ViewEncapsulation, } from '@angular/core';
-import { CardItem } from '../components/card-item/card-item.component';
-import { CanvasComponent } from '../components/canvas/canvas/canvas.component';
-import { CanvasService, Color, ColorClick } from '../components/canvas/canvas/canvas.service';
-import { throttleTime } from 'rxjs/operators';
-import { CanvasActionService } from '../components/canvas/canvas/canvas-actions.service';
+import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, ViewChild, ViewEncapsulation,} from '@angular/core';
+import {CardItem} from '../components/card-item/card-item.component';
+import {CanvasComponent} from '../components/canvas/canvas/canvas.component';
+import {CanvasService, Color, ColorClick} from '../components/canvas/canvas/canvas.service';
+import {throttleTime} from 'rxjs/operators';
+import {CanvasActionService} from '../components/canvas/canvas/canvas-actions.service';
+import {CanvasHistoryService} from "../components/canvas/canvas/canavas-history.service";
+import {DockService} from "../modules/dock/dock.service";
 
 export type Tabs = 'general' | 'colors';
 
@@ -26,9 +28,9 @@ export class HomePage implements AfterViewInit {
   // public imageUrl =
   //   'https://image.freepik.com/fotos-gratis/vista-vertical-na-torre-eiffel-paris-franca_1258-3169.jpg';
   // public imageUrl = '';
-  public imageUrl = 'assets/shapes.svg';
+  public imageUrl;
   public imageMetadata: CardItem[] = [];
-  public activeTab: Tabs = 'colors';
+  public activeTab: Tabs = 'general';
 
   showCropper = false;
   imageChangedEvent: any = '';
@@ -48,7 +50,9 @@ export class HomePage implements AfterViewInit {
 
   constructor(private changeRef: ChangeDetectorRef,
               private canvasService: CanvasService,
-              private canvasActions: CanvasActionService) {
+              private canvasActions: CanvasActionService,
+              public canvasHistory: CanvasHistoryService,
+              private dockService: DockService) {
     this.canvasService.onMouseMoveColor.pipe(
       throttleTime(100)
     ).subscribe((color: Color) => {
@@ -69,6 +73,10 @@ export class HomePage implements AfterViewInit {
       this.pickedColor = color.color;
       this.pixelCount = color.numberOfPixels;
     });
+  }
+
+  ionViewWillEnter() {
+    this.dockService.activateSideBar();
   }
 
   ngAfterViewInit(): void {
@@ -126,18 +134,26 @@ export class HomePage implements AfterViewInit {
   }
 
   public changeTab(value: Tabs): void {
-    console.log(value);
     this.activeTab = value;
   }
 
-  saveImage() {
-    const imageDownload = this.canvasService.mainImage.toDataURL();
+  async saveImage() {
+    const dataURL = this.canvasService.canvas.toDataURL({
+      format: 'png',
+      multiplier: 2,
+    });
+
+
+    const blob = await fetch(dataURL).then(r => r.blob());
+    const url = URL.createObjectURL(blob);
 
     const a = document.createElement('a');
-    a.href = imageDownload;
+    a.href = url;
     a.download = 'image.jpg';
 
     a.click();
+    URL.revokeObjectURL(url);
+    a.remove();
   }
 
   onPickedColor($event: Color) {
@@ -163,6 +179,10 @@ export class HomePage implements AfterViewInit {
 
   setGreenfyFilter() {
     this.canvasService.setGreenfyFilter(!this.canvasService?.mainImage?.filters[6]);
+  }
+
+  setGrayScaleFilter(){
+    this.canvasService.setGrayScaleFilter(!this.canvasService?.mainImage?.filters[9]);
   }
 
   setBrightness(value: CustomEvent): void {

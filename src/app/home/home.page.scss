@@ -12,6 +12,7 @@ app-home {
     width: 100%;
     margin-top: var(--offset-top);
     overflow: hidden;
+    background-color: white;
 
     .details {
       z-index: 99;
@@ -65,6 +66,7 @@ app-home {
 
     .details {
       min-width: 350px;
+      max-width: 350px;
     }
   }
 
@@ -83,6 +85,10 @@ app-home {
 
   .picker-button {
     //margin: 16px;
+    ion-icon{
+      margin-right: 0;
+      margin-left: auto;
+    }
   }
 
   .picker-info {

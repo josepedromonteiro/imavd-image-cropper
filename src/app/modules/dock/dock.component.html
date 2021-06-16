@@ -1,0 +1,8 @@
+<div class="dock-container">
+  <div class="icons" #icons >
+    <div class="area" *ngFor="let area of areas"  [routerLink]="area.routerLink" routerLinkActive="active" >
+      <img [src]="area.icon"/>
+      <div class="dot"></div>
+    </div>
+  </div>
+</div>

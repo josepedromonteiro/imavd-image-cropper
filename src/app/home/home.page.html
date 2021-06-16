@@ -1,10 +1,22 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
+<!--    <ion-buttons slot="start">-->
+<!--      <ion-button slot="icon-only" (click)="canvasHistory.undo()">-->
+<!--        <ion-icon name="arrow-undo-circle-outline"></ion-icon>-->
+<!--      </ion-button>-->
+<!--      <ion-button slot="icon-only" (click)="canvasHistory.redo()">-->
+<!--        <ion-icon name="arrow-redo-circle-outline"></ion-icon>-->
+<!--      </ion-button>-->
+<!--    </ion-buttons>-->
     <ion-title>
       <b>IMAVD</b> Image Editor
     </ion-title>
     <ion-buttons slot="end">
-      <ion-button fill="solid" color="primary" *ngIf="!showCropper" class="picker-button" expand="block"
+      <ion-button  fill="solid" color="primary" (click)="imageInput.click()">
+        Import image
+        <ion-icon slot="end" name="cloud-upload-outline"></ion-icon>
+      </ion-button>
+      <ion-button  fill="solid" color="primary" *ngIf="!showCropper" class="picker-button" expand="block"
                   (click)="saveImage()">
         Save Image
         <ion-icon slot="end" name="cloud-download-outline"></ion-icon>
@@ -28,35 +40,29 @@
     </div>
 
 
-    <div class="details"><ion-segment mode="ios" class="tabs" [(ngModel)]="activeTab">
-      <ion-segment-button value="general">
-        <ion-label>General</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="colors">
-        <ion-label>Colors</ion-label>
-      </ion-segment-button>
-    </ion-segment>
+    <div class="details">
+      <ion-segment mode="ios" class="tabs" [(ngModel)]="activeTab">
+        <ion-segment-button value="general">
+          <ion-label>General</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="colors">
+          <ion-label>Colors</ion-label>
+        </ion-segment-button>
+      </ion-segment>
       <div class="details-container">
-      <ion-button *ngIf="!imageUrl else imageData" (click)="imageInput.click()">
-        Import image
-      </ion-button>
+        <ion-list mode="ios" lines="none">
+          <ng-container [ngSwitch]="activeTab">
+            <ng-container *ngSwitchCase="'general'" [ngTemplateOutlet]="details"></ng-container>
+            <ng-container *ngSwitchCase="'colors'" [ngTemplateOutlet]="colors"></ng-container>
+          </ng-container>
+        </ion-list>
       </div>
     </div>
   </div>
 </ion-content>
 
-<ng-template #imageData>
-
-  <ion-list mode="ios" lines="none">
-    <ng-container [ngSwitch]="activeTab">
-      <ng-container *ngSwitchCase="'general'" [ngTemplateOutlet]="details"></ng-container>
-      <ng-container *ngSwitchCase="'colors'" [ngTemplateOutlet]="colors"></ng-container>
-    </ng-container>
-  </ion-list>
-</ng-template>
-
 <ng-template #details>
-  <app-expandable-card title="Image details" icon="information-circle-outline">
+  <app-expandable-card title="Image details" icon="information-circle-outline" *ngIf="imageMetadata.length > 0">
     <ion-card>
       <ion-card-content>
         <app-card-item *ngFor="let item of imageMetadata" [item]="item">
@@ -84,6 +90,28 @@
       Cancel
     </ion-button>
   </app-expandable-card>
+  <app-expandable-card title="Objects" icon="cube-outline">
+    <ion-button class="picker-button" expand="block" [fill]="'outline'" (click)="canvasService.addTextToCanvas()">
+      Add text
+      <ion-icon name="text-outline" slot="end"></ion-icon>
+    </ion-button>
+    <ion-button class="picker-button" expand="block" [fill]="'outline'" (click)="canvasService.addCircleToCanvas()">
+      Add Circle
+      <ion-icon name="ellipse-outline" slot="end"></ion-icon>
+    </ion-button>
+    <ion-button class="picker-button" expand="block" [fill]="'outline'" (click)="canvasService.addSquareToCanvas()">
+      Add Square
+      <ion-icon name="square-outline" slot="end"></ion-icon>
+    </ion-button>
+    <ion-button class="picker-button" expand="block" [fill]="'outline'" (click)="canvasService.addTriangleToCanvas()">
+      Add Triangle
+      <ion-icon name="triangle-outline" slot="end"></ion-icon>
+    </ion-button>
+  </app-expandable-card>
+  <app-expandable-card title="Text to speech" icon="mic-outline">
+    <app-image-tts></app-image-tts>
+  </app-expandable-card>
+
 </ng-template>
 
 <ng-template #colors>
@@ -97,7 +125,8 @@
 
     <div class="item">
       <ion-label>Intensity</ion-label>
-      <ion-range min="0" max="100" [(ngModel)]="variables.remove_color.intensity" (ionChange)="backgroundColorIntensityChange()">
+      <ion-range min="0" max="100" [(ngModel)]="variables.remove_color.intensity"
+                 (ionChange)="backgroundColorIntensityChange()">
       </ion-range>
       <ion-note class="color-note">
         {{variables.remove_color.intensity}}
@@ -136,6 +165,11 @@
     <ion-button color="success" class="picker-button" expand="block"
                 [fill]="canvasService?.mainImage?.filters[6] ? 'solid' : 'outline'" (click)="setGreenfyFilter()">
       Greenfy
+    </ion-button>
+
+    <ion-button color="light" class="picker-button" expand="block"
+                [fill]="canvasService?.mainImage?.filters[9] ? 'solid' : 'outline'" (click)="setGrayScaleFilter()">
+      Grayscale
     </ion-button>
   </app-expandable-card>
   <app-expandable-card title="Color adjustments" icon="color-fill-outline">

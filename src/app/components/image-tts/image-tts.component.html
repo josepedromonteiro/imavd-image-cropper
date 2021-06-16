@@ -1,0 +1,37 @@
+<div class="helper">
+  <div class="title">
+    <ion-icon name="help-circle-outline"></ion-icon>
+    <h3>Helper</h3>
+  </div>
+  <div class="commands">
+    <p>Available $Object: <b>Everything, Image, Square, Triangle, Circle</b></p>
+    <p>Available $colors: <b>Red, blue, green, yellow, orange and purple</b></p>
+    <ul>
+      <li>$Object <b>create</b></li>
+      <li>$Object <b>rotate right</b></li>
+      <li>$Object <b>rotate left</b></li>
+      <li>$Object <b>grow</b></li>
+      <li>$Object <b>half</b></li>
+      <li>$Object <b>duplicate</b></li>
+      <li>$Object <b>translate horizontal</b></li>
+      <li>$Object <b>translate vertical</b></li>
+      <li>$Object <b>change color to $colors</b></li>
+      <li>Image <b>grayscale</b></li>
+      <li><b>Abort animations</b></li>
+    </ul>
+  </div>
+  <div class="actions">
+    <div class="recording-text" [ngClass]="{'hide': !isRecording}">
+      {{speechRecognition.text |  async}}
+    </div>
+    <ion-button class="start-button" (click)="startRecording()" *ngIf="!isRecording;else stopRec">
+      Start
+    </ion-button>
+  </div>
+</div>
+
+<ng-template  #stopRec>
+  <ion-button class="start-button" fill="outline" (click)="stopRecording()">
+    Stop
+  </ion-button>
+</ng-template>

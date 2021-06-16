@@ -1,0 +1,41 @@
+app-user-card {
+
+  display: flex;
+  flex-direction: column;
+  .header{
+    position: sticky;
+    top: 0;
+  }
+
+  .content{
+    flex: 1;
+    overflow: auto;
+  }
+  .avatar{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+    img{
+      height: 100px;
+      width: 100px;
+      border-radius: 50px;
+      object-fit: cover;
+    }
+  }
+
+  .name {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    font-weight: bold;
+    font-size: 18px;
+  }
+
+  h2 {
+    font-weight: bold;
+    font-size: 14px;
+  }
+}

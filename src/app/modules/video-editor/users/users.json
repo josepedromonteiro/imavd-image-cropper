@@ -1,0 +1,17 @@
+[
+  {
+    "name": "José Monteiro",
+    "photo": "assets/me.jpeg",
+    "cv": "<h1 style=\"color: #5e9ca0;\">Curriculum Vitae</h1>\n<p>Nome: <strong>Jos&eacute; Monteiro</strong></p>\n<p>Profiss&atilde;o: <strong>Frontend developer</strong></p>\n<p>Empresa: <strong>Nau21</strong></p>\n<p>&nbsp;</p>\n<h2>Experi&ecirc;ncia</h2>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<h2>Forma&ccedil;&atilde;o acad&eacute;mica</h2>\n<p>&nbsp;</p>\n<p>&nbsp;</p>"
+  },
+  {
+    "name": "Gonçalo Silva",
+    "photo": "assets/goncalo.jpeg",
+    "cv": "<h1>Curriculum Vitae</h1>"
+  },
+  {
+    "name": "António Castro",
+    "photo": "assets/avc.png",
+    "cv": "<h1>Curriculum Vitae</h1>"
+  }
+]

@@ -1,0 +1,19 @@
+app-users {
+  --ck-color-base-background: var(--ion-background-color);
+  --ck-color-text: var(--ion-text-color);
+  --ck-color-toolbar-background: var(--ion-background-color);
+  --ck-color-base-border: transparent;
+  --ck-color-toolbar-border: transparent;
+  --ck-color-button-default-hover-background: rgba(var(--ion-text-color-rgb), .1);
+
+  .ck-editor {
+    border-radius: 15px;
+    overflow: hidden;
+  }
+
+  .footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

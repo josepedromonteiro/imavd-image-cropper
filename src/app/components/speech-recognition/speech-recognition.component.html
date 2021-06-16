@@ -1,0 +1,47 @@
+<div class="text-to-audio">
+  <h2>Speech to text</h2>
+  <form class="example-form bottom">
+    <div class="tts-content">
+      <div class="options">
+        <ion-item>
+          <ion-label>Language</ion-label>
+          <ion-select [(ngModel)]="speechService.activeLanguage" [ngModelOptions]="{standalone: true}">
+            <ion-select-option *ngFor="let lang of languageService.langs" [value]="lang.code" >
+              {{lang.name}}</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-button [disabled]="!speechService.activeLanguage" color="primary" (click)="toggle()">
+          <ng-container *ngIf="!(speechService.isRecording | async); else stop">
+            <ion-icon name="mic"></ion-icon>
+            Record
+          </ng-container>
+          <ng-template #stop>
+            <ion-icon name="stop"></ion-icon>
+            STOP
+          </ng-template>
+          </ion-button>
+      </div>
+      <div class="text-area-content">
+        <ion-item class="text-area">
+          <ion-label position="stacked">Record your speech</ion-label>
+          <ion-textarea readonly rows="10"  [value]="speechService.text | async">
+          </ion-textarea>
+        </ion-item>
+        <div class="actions" *ngIf="(speechService.text | async) && !(speechService.isRecording | async)">
+
+          <ion-button color="primary" (click)="clearText()">
+            <ion-icon name="clear"></ion-icon>
+            Clear text
+          </ion-button>
+
+
+          <ion-button  color="primary" (click)="speak()">
+            <ion-icon name="volume-up"></ion-icon>
+            Speak
+          </ion-button>
+
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

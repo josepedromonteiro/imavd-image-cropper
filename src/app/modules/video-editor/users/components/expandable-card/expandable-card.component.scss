@@ -1,0 +1,45 @@
+app-user-expandable-card {
+  .card-content {
+    padding: 10px;
+    transition: all .6s cubic-bezier(0.25, 1, 0.5, 1);
+    border-radius: 20px;
+    background-color: rgba(var(--ion-background-color-rgb), .7);
+    margin-bottom: 10px;
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .start{
+        display: flex;
+        align-items: center;
+        justify-content: start;
+
+        h2{
+          font-weight: bold;
+        }
+      }
+
+      .end{
+        ion-icon{
+          transition: all .6s cubic-bezier(0.25, 1, 0.5, 1);
+          &.rotated{
+            transform: rotate(-180deg);
+          }
+        }
+      }
+    }
+
+    .content {
+      padding: 0;
+      transition: all .6s cubic-bezier(0.25, 1, 0.5, 1);
+      width: 100%;
+      overflow: auto;
+
+      &.collapsed{
+        overflow: hidden;
+      }
+    }
+  }
+}

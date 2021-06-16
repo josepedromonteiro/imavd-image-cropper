@@ -1,0 +1,53 @@
+app-image-tts{
+  .helper{
+    background-color: rgba(var(--ion-background-color-rgb), .5);
+    border-radius: 10px;
+    padding: 10px;
+    .title{
+      display: flex;
+      font-size: 16px;
+      font-weight: bold;
+
+      ion-icon{
+        margin-right: 10px;
+      }
+    }
+
+    .commands{
+      margin-top: 10px;
+      margin-bottom: 20px;
+      text-align: start;
+      font-size: 12px;
+
+      ul{
+        margin-top: 10px;
+      }
+    }
+
+    .actions{
+      .start-button{
+        margin: auto;
+        width: 100px;
+        height: 40px;
+      }
+
+      .recording-text{
+        transition: max-height .6s cubic-bezier(0.25, 1, 0.5, 1), margin 1s cubic-bezier(0.25, 1, 0.5, 1);
+        padding: 5px;
+        background-color: rgba(var(--ion-background-color-rgb), .5);
+        border-radius: 10px;
+        max-width: 240px;
+        min-height: 30px;
+        margin: 0 auto 10px auto;
+        overflow: hidden;
+
+        &.hide{
+          max-height: 0;
+          padding: 0;
+          margin: 0;
+          min-height: 0;
+        }
+      }
+    }
+  }
+}

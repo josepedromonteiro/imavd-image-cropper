@@ -1,0 +1,16 @@
+<div class="card-content">
+  <div class="header">
+    <div class="start">
+      <ion-avatar>
+        <img [src]="avatar"/>
+      </ion-avatar>
+      <h2>{{title}}</h2>
+    </div>
+    <div class="end">
+      <ion-icon [ngClass]="{'rotated': state === 'expanded' }" (click)="toggle()" name="chevron-down-circle-outline"></ion-icon>
+    </div>
+  </div>
+  <div class="content" [style]="{'max-height': state === 'collapsed' ? 0 : 800+'px'}" #content>
+    <ng-content></ng-content>
+  </div>
+</div>

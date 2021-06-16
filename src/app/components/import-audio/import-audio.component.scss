@@ -1,0 +1,21 @@
+app-import-audio{
+  ngx-audio-player{
+    display: block;
+    margin-top: 10px;
+
+    mat-card, mat-expansion-panel, .mat-table, mat-paginator{
+      background-color: rgba(113, 112, 112, 0.3) !important;
+    }
+
+    .mat-table{
+      border-top-right-radius: 10px;
+      border-top-left-radius: 10px;
+      overflow: hidden;
+    }
+
+    mat-paginator{
+      border-bottom-right-radius: 10px;
+      border-bottom-left-radius: 10px;
+    }
+  }
+}
