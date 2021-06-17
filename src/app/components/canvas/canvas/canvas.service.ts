@@ -78,7 +78,11 @@ export enum TTS_ACTIONS {
   ABORT_ANIMATIONS,
   GRAYSCALE,
   COLOR,
-  ADD
+  ADD,
+  QUAD,
+  DUAL,
+  TOP_LEFT,
+  BOTTOM_RIGHT
 }
 
 
@@ -340,7 +344,6 @@ export class CanvasService {
 
   public activateCrop(): void {
     const activeElement = /**this.canvas.getActiveObject() ||**/ this.canvas;
-    console.log(activeElement);
     const cropDimensions = {
       height: activeElement.height * .5,
       width: activeElement.width * .5
@@ -488,6 +491,8 @@ export class CanvasService {
       width: 100
     });
 
+    circle.type = 'circle';
+
     this.canvas.add(circle);
     this.centerObject(circle);
     this.canvas.renderAll();
@@ -501,6 +506,7 @@ export class CanvasService {
       width: 100
     });
 
+    square.type = 'square';
     this.canvas.add(square);
     this.centerObject(square);
     this.canvas.renderAll();
@@ -514,6 +520,7 @@ export class CanvasService {
       fill: color
     });
 
+    triangle.type = 'triangle';
     this.canvas.add(triangle);
     this.centerObject(triangle);
     this.canvas.renderAll();
@@ -547,6 +554,26 @@ export class CanvasService {
     }
 
     switch (action) {
+      case TTS_ACTIONS.QUAD:
+        objs.forEach((iObj: fabric.Object) => {
+          this.quadCanvas(iObj);
+        });
+        break;
+      case TTS_ACTIONS.DUAL:
+        objs.forEach((iObj: fabric.Object) => {
+          this.dualCanvas(iObj);
+        });
+        break;
+      case TTS_ACTIONS.TOP_LEFT:
+        objs.forEach((iObj: fabric.Object) => {
+          this.alignTopLeft(iObj);
+        });
+        break;
+      case TTS_ACTIONS.BOTTOM_RIGHT:
+        objs.forEach((iObj: fabric.Object) => {
+          this.alignBottomRight(iObj);
+        });
+        break;
       case TTS_ACTIONS.ROTATE_RIGHT:
         objs.forEach((iObj: fabric.Object) => {
           this.animateRotate(iObj);
@@ -630,9 +657,43 @@ export class CanvasService {
     }
   }
 
-  public async quadCanvas(): Promise<void> {
-    this.groupSelected();
-    const activeObject = await this.getImageFromObject(this.canvas.getActiveObject());
+  public multiplyHorizontally(times: number = 1): void {
+    const activeObject = this.canvas.getActiveObject();
+    console.log(activeObject);
+    const items: fabric.Object[] = activeObject._objects ? activeObject._objects : [activeObject];
+    items.forEach((item: fabric.Object) => {
+      for (let step = 0; step < times; step++) {
+        const clonedObject = fabric.util.object.clone(item);
+        this.canvas.add(clonedObject);
+        this.addObjectToArray(clonedObject);
+        clonedObject.set('left', activeObject.left + (activeObject.width + 10) * (step + 1));
+      }
+    });
+    this.canvas.requestRenderAll();
+  }
+
+  public multiplyVertically(times: number = 1): void {
+    const activeObject = this.canvas.getActiveObject();
+    const items: fabric.Object[] = activeObject._objects ? activeObject._objects : [activeObject];
+
+    items.forEach((item: fabric.Object) => {
+      for (let step = 0; step < times; step++) {
+        const clonedObject = fabric.util.object.clone(item);
+        this.canvas.add(clonedObject);
+        this.addObjectToArray(clonedObject);
+        clonedObject.set('top', activeObject.top + (activeObject.height + 10) * (step + 1));
+      }
+    });
+    this.canvas.requestRenderAll();
+  }
+
+
+
+  public async quadCanvas(object?: fabric.Object): Promise<void> {
+    if (!object) {
+      this.groupSelected();
+    }
+    const activeObject = object || await this.getImageFromObject(this.canvas.getActiveObject());
     if (activeObject) {
 
       const objectTopLeft = fabric.util.object.clone(activeObject);
@@ -658,40 +719,59 @@ export class CanvasService {
       this.canvas.add(objectBottomRight);
       this.canvas.add(objectTopRight);
       this.canvasObjects.images.push(...[objectTopLeft, objectBottomLeft, objectBottomRight, objectTopRight]);
-      this.canvas.remove(this.canvas.getActiveObject());
+      this.canvas.remove(activeObject);
 
       this.canvas.requestRenderAll();
     }
 
   }
 
-  public async dualCanvas(): Promise<void> {
+  private addObjectToArray(object: fabric.Object): void {
+    switch (object.type) {
+      case 'triangle':
+        this.canvasObjects.triangles.push(object);
+        break;
+      case 'square':
+        this.canvasObjects.squares.push(object);
+        break;
+      case 'circle':
+        this.canvasObjects.circle.push(object);
+      case 'image':
+        this.canvasObjects.images.push(object);
+        break;
+    }
+  }
 
-    this.groupSelected();
-    const activeObject = await this.getImageFromObject(this.canvas.getActiveObject());
+  public async dualCanvas(object?: fabric.Object): Promise<void> {
+    if (!object) {
+      this.groupSelected();
+    }
+    const activeObject = object || await this.getImageFromObject(this.canvas.getActiveObject());
     if (activeObject) {
 
       const objectTop = fabric.util.object.clone(activeObject);
-      objectTop.set('left', this.canvas.getActiveObject().left);
+      objectTop.set('left', activeObject.left);
       objectTop.set('top', this.canvas.height / 4 - (objectTop.height * objectTop.scaleY) / 2);
 
 
       const objectBottom = fabric.util.object.clone(activeObject);
-      objectBottom.set('left', this.canvas.getActiveObject().left);
+      objectBottom.set('left', activeObject.left);
       objectBottom.set('top', (3 * this.canvas.height) / 4 - (objectBottom.height * objectBottom.scaleY) / 2);
 
       this.canvas.add(objectTop);
       this.canvas.add(objectBottom);
       this.canvasObjects.images.push(...[objectTop, objectBottom]);
-      this.canvas.remove(this.canvas.getActiveObject());
+      this.canvas.remove(activeObject);
 
       this.canvas.requestRenderAll();
     }
   }
 
-  public async alignTopLeft(): Promise<void> {
-    this.groupSelected();
-    const activeObject = await this.getImageFromObject(this.canvas.getActiveObject());
+  public async alignTopLeft(object?: fabric.Object): Promise<void> {
+    if (!object) {
+      this.groupSelected();
+    }
+    const activeObject = object || await this.getImageFromObject(this.canvas.getActiveObject());
     if (activeObject) {
 
       const objectTopLeft = fabric.util.object.clone(activeObject);
@@ -699,15 +779,17 @@ export class CanvasService {
       this.alignObject('left', objectTopLeft);
       this.canvas.add(objectTopLeft);
       this.canvasObjects.images.push(objectTopLeft);
-      this.canvas.remove(this.canvas.getActiveObject());
+      this.canvas.remove(activeObject);
 
       this.canvas.requestRenderAll();
     }
   }
 
-  public async alignBottomRight(): Promise<void> {
-    this.groupSelected();
-    const activeObject = await this.getImageFromObject(this.canvas.getActiveObject());
+  public async alignBottomRight(object?: fabric.Object): Promise<void> {
+    if (!object) {
+      this.groupSelected();
+    }
+    const activeObject = object || await this.getImageFromObject(this.canvas.getActiveObject());
     if (activeObject) {
       const objectBottomRight = fabric.util.object.clone(activeObject);
       console.log(objectBottomRight);
@@ -715,7 +797,7 @@ export class CanvasService {
       this.alignObject('right', objectBottomRight);
       this.canvas.add(objectBottomRight);
       this.canvasObjects.images.push(objectBottomRight);
-      this.canvas.remove(this.canvas.getActiveObject());
+      this.canvas.remove(activeObject);
 
       this.canvas.requestRenderAll();
     }

@@ -111,6 +111,22 @@ export class ImageTtsComponent implements OnInit, OnDestroy {
       {
         action: TTS_ACTIONS.ADD,
         texts: ['create']
+      },
+      {
+        action: TTS_ACTIONS.QUAD,
+        texts: ['quad']
+      },
+      {
+        action: TTS_ACTIONS.DUAL,
+        texts: ['dual']
+      },
+      {
+        action: TTS_ACTIONS.BOTTOM_RIGHT,
+        texts: ['bottom', 'right']
+      },
+      {
+        action: TTS_ACTIONS.TOP_LEFT,
+        texts: ['top', 'left']
       }
     ];
 

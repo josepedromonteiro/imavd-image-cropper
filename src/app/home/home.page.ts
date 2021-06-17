@@ -31,6 +31,9 @@ export class HomePage implements AfterViewInit {
   public activeTab: Tabs = 'general';
   public isCropping: BehaviorSubject<boolean>;
 
+  public multiplierX: string = '';
+  public multiplierY: string = '';
+
   showCropper = false;
   imageChangedEvent: any = '';
 
@@ -204,28 +207,41 @@ export class HomePage implements AfterViewInit {
     this.canvasService.flipVertically(!this.canvasService.mainImage.flipY);
   }
 
-  flipHorizontally(): void {
+  public flipHorizontally(): void {
     this.canvasService.flipHorizontally(!this.canvasService.mainImage.flipX);
   }
 
-  backgroundColorIntensityChange(): void {
+  public backgroundColorIntensityChange(): void {
     this.canvasService.setBackgroundColor(this.variables?.remove_color?.color, this.variables?.remove_color?.intensity);
   }
 
-  quadCanvas() {
+  public quadCanvas() {
     this.canvasService.quadCanvas();
   }
 
-  dualCanvas() {
+  public dualCanvas() {
     this.canvasService.dualCanvas();
   }
 
-  alignTopLeft() {
+  public alignTopLeft() {
     this.canvasService.alignTopLeft();
   }
 
-  alignBottomRight() {
+  public alignBottomRight() {
     this.canvasService.alignBottomRight();
+  }
+
+  public multiply(): void {
+    if (this.multiplierX && Number(this.multiplierX) > 0) {
+      this.canvasService.multiplyHorizontally(Number(this.multiplierX));
+    }
+
+    if (this.multiplierY && Number(this.multiplierY) > 0) {
+      this.canvasService.multiplyVertically(Number(this.multiplierY));
+    }
+
+    this.multiplierX = '';
+    this.multiplierY = '';
   }
 }
 

@@ -67,12 +67,27 @@
       <div class="transform-item" (click)="quadCanvas()">
         <img src="assets/icons/quad.svg"/>
       </div>
+
       <div class="transform-item" (click)="dualCanvas()">
         <img src="assets/icons/dual.svg"/></div>
       <div class="transform-item" (click)="alignTopLeft()">
         <img src="assets/icons/top_left.svg"/></div>
       <div class="transform-item" (click)="alignBottomRight()">
         <img src="assets/icons/bottom_right.svg"/></div>
+    </div>
+    <p  class="subtitle"><b>Multiplier</b></p>
+    <div class="transform-items">
+      <ion-item>
+        <ion-label position="stacked">X axis</ion-label>
+        <ion-input type="number" [(ngModel)]="multiplierX"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Y axis</ion-label>
+        <ion-input type="number" [(ngModel)]="multiplierY"></ion-input>
+      </ion-item>
+      <ion-button (click)="multiply()">
+        <ion-icon slot="icon-only" name="checkmark-outline"></ion-icon>
+      </ion-button>
     </div>
   </app-expandable-card>
   <app-expandable-card title="Image resize" icon="information-circle-outline">
