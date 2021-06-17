@@ -1,17 +1,26 @@
-const {app, BrowserWindow} = require('electron')
+const {app, BrowserWindow, ipcMain} = require('electron')
 const url = require("url");
 const path = require("path");
 
-let mainWindow
+let mainWindow;
 
 function createWindow () {
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1020,
+    height: 900,
     titleBarStyle: "hiddenInset",
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      backgroundThrottling: false
     }
+  })
+
+  mainWindow.on('enter-full-screen', ()=>{
+    mainWindow.webContents.send('isFullscreen', true);
+  })
+
+  mainWindow.on('leave-full-screen', ()=>{
+    mainWindow.webContents.send('isFullscreen', false);
   })
 
   mainWindow.loadURL(
@@ -22,7 +31,7 @@ function createWindow () {
     })
   );
   // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+  // mainWindow.webContents.openDevTools()
 
   mainWindow.on('closed', function () {
     mainWindow = null

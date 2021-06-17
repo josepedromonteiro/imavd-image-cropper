@@ -1,11 +1,4 @@
-<div #canvasContainer class="canvas-container" [contextMenu]="contextMenuChild">
+<div #canvasContainer class="canvas-container">
   <canvas id="fabric-canvas" #canvasElement  (click)="clickColor($event)"></canvas>
 </div>
 <img #imageElement *ngIf="imageUrl && !showCropper" [src]="imageUrl" (load)="onImageLoad($event)" />
-<context-menu #contextMenuChild>
-  <ng-container *ngFor="let item of canvasService.items">
-    <ng-template contextMenuItem (execute)="item.onClick()">
-      <ion-icon [name]="item.icon"></ion-icon> {{item.label}}
-    </ng-template>
-  </ng-container>
-</context-menu>

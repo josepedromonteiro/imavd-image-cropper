@@ -14,6 +14,33 @@ app-home {
     overflow: hidden;
     background-color: white;
 
+    .transform-items {
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
+
+      .transform-item {
+        margin: 10px;
+        border-radius: 10px;
+        padding: 5px;
+        background-color: rgba(var(--ion-text-color-rgb), .1);
+        cursor: pointer;
+        transition: var(--transition-all);
+
+        &:hover {
+          background-color: rgba(var(--ion-text-color-rgb), .2);
+        }
+      }
+    }
+
+    .crop-image {
+      display: flex;
+      justify-content: space-around;
+      ion-button {
+        width: 50%;
+      }
+    }
+
     .details {
       z-index: 99;
       background-color: rgba(58, 58, 58, 0.9);
@@ -85,7 +112,7 @@ app-home {
 
   .picker-button {
     //margin: 16px;
-    ion-icon{
+    ion-icon {
       margin-right: 0;
       margin-left: auto;
     }
@@ -108,17 +135,17 @@ app-home {
     }
   }
 
-  .item{
+  .item {
     display: flex;
     align-items: center;
     justify-content: center;
 
-    ion-label{
+    ion-label {
       margin-right: 15px;
     }
   }
 
-  .color-note{
+  .color-note {
     width: 30px;
   }
 

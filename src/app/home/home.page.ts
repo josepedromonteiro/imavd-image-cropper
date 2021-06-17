@@ -6,6 +6,7 @@ import {throttleTime} from 'rxjs/operators';
 import {CanvasActionService} from '../components/canvas/canvas/canvas-actions.service';
 import {CanvasHistoryService} from "../components/canvas/canvas/canavas-history.service";
 import {DockService} from "../modules/dock/dock.service";
+import {BehaviorSubject} from "rxjs";
 
 export type Tabs = 'general' | 'colors';
 
@@ -25,12 +26,10 @@ export class HomePage implements AfterViewInit {
   public pickColorActive = false;
   public pixelCount = 0;
   public pickedColor: Color;
-  // public imageUrl =
-  //   'https://image.freepik.com/fotos-gratis/vista-vertical-na-torre-eiffel-paris-franca_1258-3169.jpg';
-  // public imageUrl = '';
   public imageUrl;
   public imageMetadata: CardItem[] = [];
   public activeTab: Tabs = 'general';
+  public isCropping: BehaviorSubject<boolean>;
 
   showCropper = false;
   imageChangedEvent: any = '';
@@ -53,6 +52,7 @@ export class HomePage implements AfterViewInit {
               private canvasActions: CanvasActionService,
               public canvasHistory: CanvasHistoryService,
               private dockService: DockService) {
+    this.isCropping = new BehaviorSubject<boolean>(false);
     this.canvasService.onMouseMoveColor.pipe(
       throttleTime(100)
     ).subscribe((color: Color) => {
@@ -181,7 +181,7 @@ export class HomePage implements AfterViewInit {
     this.canvasService.setGreenfyFilter(!this.canvasService?.mainImage?.filters[6]);
   }
 
-  setGrayScaleFilter(){
+  setGrayScaleFilter() {
     this.canvasService.setGrayScaleFilter(!this.canvasService?.mainImage?.filters[9]);
   }
 
@@ -210,6 +210,22 @@ export class HomePage implements AfterViewInit {
 
   backgroundColorIntensityChange(): void {
     this.canvasService.setBackgroundColor(this.variables?.remove_color?.color, this.variables?.remove_color?.intensity);
+  }
+
+  quadCanvas() {
+    this.canvasService.quadCanvas();
+  }
+
+  dualCanvas() {
+    this.canvasService.dualCanvas();
+  }
+
+  alignTopLeft() {
+    this.canvasService.alignTopLeft();
+  }
+
+  alignBottomRight() {
+    this.canvasService.alignBottomRight();
   }
 }
 

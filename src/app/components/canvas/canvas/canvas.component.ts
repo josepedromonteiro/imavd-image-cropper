@@ -12,10 +12,9 @@ import {
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
-import { ImageCroppedEvent } from 'ngx-image-cropper';
-import { fabric } from 'fabric';
-import { CanvasService } from './canvas.service';
-import { ContextMenuComponent } from 'ngx-contextmenu';
+import {ImageCroppedEvent} from 'ngx-image-cropper';
+import {fabric} from 'fabric';
+import {CanvasService} from './canvas.service';
 
 @Component({
   selector: 'app-canvas',
@@ -52,7 +51,7 @@ export class CanvasComponent implements AfterViewInit, AfterContentInit {
   @Output() nPixels = new EventEmitter<number>();
   @Output() onImageLoadEvent = new EventEmitter<any>();
 
-  public contextMenuChild: ElementRef<ContextMenuComponent>;
+  // public contextMenuChild: ElementRef<ContextMenuComponent>;
 
   constructor(private canvasService: CanvasService,
               @Self() private elementRef: ElementRef,
@@ -98,12 +97,26 @@ export class CanvasComponent implements AfterViewInit, AfterContentInit {
       return;
     }
 
+    // const url = URL.createObjectURL(evt.target?.files[0]);
+    // console.log(url);
+    // if (!url) {
+    //   return;
+    // }
+    // fabric.Image.fromURL(url, (img) => {
+    //   console.log(img);
+    //   if (img.width > this.canvasService.canvas.width * .9) {
+    //     img.scaleToWidth(this.canvasService.canvas.width * .9);
+    //   }
+    //   this.canvasService.addImageToCanvas(img);
+    // });
+
     setTimeout(() => {
       this.useCanvas(
         this.canvasElement.nativeElement,
         this.imageElement.nativeElement
       );
     }, 1000);
+
 
     this.onImageLoadEvent.emit(evt);
   }

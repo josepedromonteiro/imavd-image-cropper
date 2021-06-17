@@ -30,6 +30,12 @@
 @tailwind utilities;
 
 
+:root {
+  --transition-duration: 800ms;
+  --transition-function: cubic-bezier(0.25, 1, 0.5, 1);
+  --transition-all: all var(--transition-duration) var(--transition-function);
+}
+
 ion-button {
   @extend .transition-all !optional;
 }
@@ -85,9 +91,11 @@ ion-button {
   background: #151515;
 }
 
-.electron.mac-os{
-  ion-toolbar{
-    --padding-top: 35px;
-    padding-bottom: 15px;
+.electron.mac-os {
+  &:not(.fullscreen) {
+    ion-toolbar {
+      --padding-top: 35px;
+      padding-bottom: 15px;
+    }
   }
 }

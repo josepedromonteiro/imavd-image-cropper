@@ -129,6 +129,14 @@ export class CanvasService {
   public addImageToCanvas(imageUrl: string, options?: ImageOptions): void {
 
     fabric.Image.fromURL(imageUrl, (myImg): void => {
+
+      // const newWidth =  this.canvas.width * .9;
+      // const newHeight =  this.canvas.height * .9;
+      // const widthFactor = myImg.getScaledWidth() / newWidth;
+      // const heightFactor = myImg.getScaledHeight() / newHeight;
+      // const minFactor = Math.min(widthFactor, heightFactor);
+      // myImg.scale(minFactor);
+
       this.mainImage = myImg;
       this.redifyImage();
       this.greenfyImage();
@@ -149,7 +157,7 @@ export class CanvasService {
   }
 
   private enablePanAndZoom(): void {
-    this.canvas.on('mouse:down', function(opt) {
+    this.canvas.on('mouse:down', function (opt) {
       const evt = opt.e;
       if (evt.ctrlKey === true || evt.metaKey === true) {
         evt.preventDefault();
@@ -168,7 +176,7 @@ export class CanvasService {
       this.colorClick();
     });
 
-    this.canvas.on('mouse:move', function(opt) {
+    this.canvas.on('mouse:move', function (opt) {
       if (this.isDragging) {
         const e = opt.e;
         const vpt = this.viewportTransform;
@@ -179,7 +187,7 @@ export class CanvasService {
         this.lastPosY = e.clientY;
       }
     });
-    this.canvas.on('mouse:up', function(opt) {
+    this.canvas.on('mouse:up', function (opt) {
       // on mouse up we want to recalculate new interaction
       // for all objects, so we call setViewportTransform
       this.setViewportTransform(this.viewportTransform);
@@ -331,18 +339,15 @@ export class CanvasService {
   }
 
   public activateCrop(): void {
-    const activeElement = this.canvas.getActiveObject();
-    if (!activeElement) {
-      // Show warning theres no active element
-      return;
-    }
+    const activeElement = /**this.canvas.getActiveObject() ||**/ this.canvas;
+    console.log(activeElement);
     const cropDimensions = {
-      height: activeElement.height * .7,
-      width: activeElement.width * .7
+      height: activeElement.height * .5,
+      width: activeElement.width * .5
     };
     this.cutElement = new fabric.Rect({
-      left: activeElement?.left + activeElement.width / 2 - (cropDimensions.width / 2),
-      top: activeElement?.top + activeElement.height / 2 - (cropDimensions.height / 2),
+      left: (activeElement?.left || 0) + (activeElement.width - 350) / 2 - (cropDimensions.width / 2),
+      top: (activeElement?.top || 0) + activeElement.height / 2 - (cropDimensions.height / 2),
       fill: 'transparent',
       originX: 'left',
       originY: 'top',
@@ -353,6 +358,7 @@ export class CanvasService {
       width: cropDimensions.width,
       height: cropDimensions.height
     });
+    console.log(this.canvas);
     this.canvas.add(this.cutElement);
     this.canvas.setActiveObject(this.cutElement);
     this.canvasAction.addAction(CANVAS_ACTIONS.CUTTING);
@@ -374,13 +380,11 @@ export class CanvasService {
 
     this.addImageToCanvas(image);
 
-    this.mainImage.selectable = true;
-    this.canvas.setActiveObject(this.mainImage);
     this.canvas.remove(this.cutElement);
     this.canvas.renderAll();
 
 
-    this.canvas?.remove(this.canvas.getObjects()[0]);
+    this.canvas?.remove(...this.canvas.getObjects().filter((obj) => obj !== image));
   }
 
 
@@ -612,18 +616,163 @@ export class CanvasService {
         });
         break;
       case TTS_ACTIONS.ADD:
-          switch (obj) {
-            case TTS_OBJECTS.SQUARE:
-              this.addSquareToCanvas();
-              break;
-            case TTS_OBJECTS.CIRCLE:
-              this.addCircleToCanvas();
-              break;
-            case TTS_OBJECTS.TRIANGLE:
-              this.addTriangleToCanvas();
-              break;
-          }
+        switch (obj) {
+          case TTS_OBJECTS.SQUARE:
+            this.addSquareToCanvas();
+            break;
+          case TTS_OBJECTS.CIRCLE:
+            this.addCircleToCanvas();
+            break;
+          case TTS_OBJECTS.TRIANGLE:
+            this.addTriangleToCanvas();
+            break;
+        }
     }
+  }
+
+  public async quadCanvas(): Promise<void> {
+    this.groupSelected();
+    const activeObject = await this.getImageFromObject(this.canvas.getActiveObject());
+    if (activeObject) {
+
+      const objectTopLeft = fabric.util.object.clone(activeObject);
+      this.alignObject('top', objectTopLeft);
+      this.alignObject('left', objectTopLeft);
+
+      const objectTopRight = fabric.util.object.clone(activeObject);
+      this.alignObject('top', objectTopRight);
+      this.alignObject('right', objectTopRight);
+
+
+      const objectBottomRight = fabric.util.object.clone(activeObject);
+      this.alignObject('right', objectBottomRight);
+      this.alignObject('bottom', objectBottomRight);
+
+
+      const objectBottomLeft = fabric.util.object.clone(activeObject);
+      this.alignObject('bottom', objectBottomLeft);
+      this.alignObject('left', objectBottomLeft);
+
+      this.canvas.add(objectTopLeft);
+      this.canvas.add(objectBottomLeft);
+      this.canvas.add(objectBottomRight);
+      this.canvas.add(objectTopRight);
+      this.canvasObjects.images.push(...[objectTopLeft, objectBottomLeft, objectBottomRight, objectTopRight]);
+      this.canvas.remove(this.canvas.getActiveObject());
+
+      this.canvas.requestRenderAll();
+    }
+
+  }
+
+  public async dualCanvas(): Promise<void> {
+
+    this.groupSelected();
+    const activeObject = await this.getImageFromObject(this.canvas.getActiveObject());
+    if (activeObject) {
+
+      const objectTop = fabric.util.object.clone(activeObject);
+      objectTop.set('left', this.canvas.getActiveObject().left);
+      objectTop.set('top', this.canvas.height / 4 - (objectTop.height * objectTop.scaleY) / 2);
+
+
+      const objectBottom = fabric.util.object.clone(activeObject);
+      objectBottom.set('left', this.canvas.getActiveObject().left);
+      objectBottom.set('top', (3 * this.canvas.height) / 4 - (objectBottom.height * objectBottom.scaleY) / 2);
+
+      this.canvas.add(objectTop);
+      this.canvas.add(objectBottom);
+      this.canvasObjects.images.push(...[objectTop, objectBottom]);
+      this.canvas.remove(this.canvas.getActiveObject());
+
+      this.canvas.requestRenderAll();
+    }
+  }
+
+  public async alignTopLeft(): Promise<void> {
+    this.groupSelected();
+    const activeObject = await this.getImageFromObject(this.canvas.getActiveObject());
+    if (activeObject) {
+
+      const objectTopLeft = fabric.util.object.clone(activeObject);
+      this.alignObject('top', objectTopLeft);
+      this.alignObject('left', objectTopLeft);
+      this.canvas.add(objectTopLeft);
+      this.canvasObjects.images.push(objectTopLeft);
+      this.canvas.remove(this.canvas.getActiveObject());
+
+      this.canvas.requestRenderAll();
+    }
+  }
+
+  public async alignBottomRight(): Promise<void> {
+    this.groupSelected();
+    const activeObject = await this.getImageFromObject(this.canvas.getActiveObject());
+    if (activeObject) {
+      const objectBottomRight = fabric.util.object.clone(activeObject);
+      console.log(objectBottomRight);
+      this.alignObject('bottom', objectBottomRight);
+      this.alignObject('right', objectBottomRight);
+      this.canvas.add(objectBottomRight);
+      this.canvasObjects.images.push(objectBottomRight);
+      this.canvas.remove(this.canvas.getActiveObject());
+
+      this.canvas.requestRenderAll();
+    }
+  }
+
+  public getImageFromObject(object: fabric.Object): Promise<any> {
+    return new Promise((resolve, _) => {
+      return new fabric.Image.fromURL(object.toDataURL(), (image) => {
+        return resolve(image);
+      });
+    });
+  }
+
+  public alignObject(val: 'left' | 'top' | 'right' | 'bottom' | 'center', object: fabric.Object, padding = 20) {
+    switch (val) {
+      case 'left':
+        object.set('left', padding);
+        break;
+      case 'right':
+        object.set('left',
+          this.canvas.width - (object.width * object.scaleX) - 350 - padding // 350 - sidebar width
+        );
+        break;
+      case 'top':
+        object.set('top', padding);
+        break;
+      case 'bottom':
+        object.set('top', this.canvas.height - (object.height * object.scaleY) - 110 - padding) //  110 - dock
+        break;
+      case 'center':
+        console.log(object.width);
+        object.set('left', (this.canvas.width / 2) - ((object.width * object.scaleX) * 2)
+        );
+        break;
+    }
+  }
+
+  public groupSelected(): void {
+    if (!this.canvas.getActiveObject()) {
+      return;
+    }
+    if (this.canvas.getActiveObject().type !== 'activeSelection') {
+      return;
+    }
+    this.canvas.getActiveObject().toGroup();
+    this.canvas.requestRenderAll();
+  }
+
+  public ungroupSelected(): void {
+    if (!this.canvas.getActiveObject()) {
+      return;
+    }
+    if (this.canvas.getActiveObject().type !== 'group') {
+      return;
+    }
+    this.canvas.getActiveObject().toActiveSelection();
+    this.canvas.requestRenderAll();
   }
 
   private animateScale(iObj: fabric.Object, from = 1, to = 2): void {
