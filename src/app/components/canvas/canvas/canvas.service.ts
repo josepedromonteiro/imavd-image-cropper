@@ -688,11 +688,11 @@ export class CanvasService {
   }
 
 
-
   public async quadCanvas(object?: fabric.Object): Promise<void> {
     if (!object) {
       this.groupSelected();
     }
+    const placeholderObject = object || this.canvas.getActiveObject();
     const activeObject = object || await this.getImageFromObject(this.canvas.getActiveObject());
     if (activeObject) {
 
@@ -719,7 +719,7 @@ export class CanvasService {
       this.canvas.add(objectBottomRight);
       this.canvas.add(objectTopRight);
       this.canvasObjects.images.push(...[objectTopLeft, objectBottomLeft, objectBottomRight, objectTopRight]);
-      this.canvas.remove(activeObject);
+      this.canvas.remove(placeholderObject);
 
       this.canvas.requestRenderAll();
     }
@@ -731,11 +731,14 @@ export class CanvasService {
       case 'triangle':
         this.canvasObjects.triangles.push(object);
         break;
+        break;
       case 'square':
         this.canvasObjects.squares.push(object);
         break;
+        break;
       case 'circle':
         this.canvasObjects.circle.push(object);
+        break;
       case 'image':
         this.canvasObjects.images.push(object);
         break;
@@ -746,22 +749,24 @@ export class CanvasService {
     if (!object) {
       this.groupSelected();
     }
+    const placeholderObject = object || this.canvas.getActiveObject();
     const activeObject = object || await this.getImageFromObject(this.canvas.getActiveObject());
     if (activeObject) {
 
       const objectTop = fabric.util.object.clone(activeObject);
-      objectTop.set('left', activeObject.left);
+      objectTop.set('left', placeholderObject.left);
       objectTop.set('top', this.canvas.height / 4 - (objectTop.height * objectTop.scaleY) / 2);
 
 
       const objectBottom = fabric.util.object.clone(activeObject);
-      objectBottom.set('left', activeObject.left);
+      objectBottom.set('left', placeholderObject.left);
       objectBottom.set('top', (3 * this.canvas.height) / 4 - (objectBottom.height * objectBottom.scaleY) / 2);
 
       this.canvas.add(objectTop);
       this.canvas.add(objectBottom);
       this.canvasObjects.images.push(...[objectTop, objectBottom]);
-      this.canvas.remove(activeObject);
+
+      this.canvas.remove(placeholderObject);
 
       this.canvas.requestRenderAll();
     }
@@ -771,15 +776,18 @@ export class CanvasService {
     if (!object) {
       this.groupSelected();
     }
-    const activeObject = object || await this.getImageFromObject(this.canvas.getActiveObject());
+    const placeholderObject = object || this.canvas.getActiveObject();
+    const activeObject = object || this.canvas.getActiveObject();
     if (activeObject) {
 
       const objectTopLeft = fabric.util.object.clone(activeObject);
       this.alignObject('top', objectTopLeft);
       this.alignObject('left', objectTopLeft);
       this.canvas.add(objectTopLeft);
-      this.canvasObjects.images.push(objectTopLeft);
-      this.canvas.remove(activeObject);
+
+      this.ungroup(objectTopLeft);
+      // this.canvasObjects.images.push(objectTopLeft);
+      this.canvas.remove(placeholderObject);
 
       this.canvas.requestRenderAll();
     }
@@ -789,15 +797,17 @@ export class CanvasService {
     if (!object) {
       this.groupSelected();
     }
-    const activeObject = object || await this.getImageFromObject(this.canvas.getActiveObject());
+    const placeholderObject = object || this.canvas.getActiveObject();
+    const activeObject = object || this.canvas.getActiveObject();
     if (activeObject) {
       const objectBottomRight = fabric.util.object.clone(activeObject);
       console.log(objectBottomRight);
       this.alignObject('bottom', objectBottomRight);
       this.alignObject('right', objectBottomRight);
       this.canvas.add(objectBottomRight);
-      this.canvasObjects.images.push(objectBottomRight);
-      this.canvas.remove(activeObject);
+      this.ungroup(objectBottomRight);
+      // this.canvasObjects.images.push(objectBottomRight);
+      this.canvas.remove(placeholderObject);
 
       this.canvas.requestRenderAll();
     }
@@ -846,14 +856,20 @@ export class CanvasService {
     this.canvas.requestRenderAll();
   }
 
-  public ungroupSelected(): void {
-    if (!this.canvas.getActiveObject()) {
+  public ungroup(group?: fabric.Object): void {
+    const obj = group || this.canvas.getActiveObject();
+    if (obj?.type !== 'group') {
       return;
     }
-    if (this.canvas.getActiveObject().type !== 'group') {
-      return;
-    }
-    this.canvas.getActiveObject().toActiveSelection();
+
+    obj._objects.forEach((unit) => {
+      if (unit?.type === 'group') {
+        this.ungroup(unit);
+      } else {
+        this.addObjectToArray(unit);
+      }
+    });
+    obj.toActiveSelection();
     this.canvas.requestRenderAll();
   }
 
