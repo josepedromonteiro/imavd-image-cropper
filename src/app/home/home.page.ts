@@ -51,8 +51,8 @@ export class HomePage implements AfterViewInit {
   };
 
   constructor(private changeRef: ChangeDetectorRef,
-              private canvasService: CanvasService,
-              private canvasActions: CanvasActionService,
+              public canvasService: CanvasService,
+              public canvasActions: CanvasActionService,
               public canvasHistory: CanvasHistoryService,
               private dockService: DockService) {
     this.isCropping = new BehaviorSubject<boolean>(false);
@@ -188,18 +188,18 @@ export class HomePage implements AfterViewInit {
     this.canvasService.setGrayScaleFilter(!this.canvasService?.mainImage?.filters[9]);
   }
 
-  setBrightness(value: CustomEvent): void {
-    const brightness: number = value.detail.value / 255;
+  setBrightness(value: Event): void {
+    const brightness: number = (value as CustomEvent).detail.value / 255;
     this.canvasService.setBrightness(brightness);
   }
 
-  setContrast(value: CustomEvent): void {
-    const contrast: number = value.detail.value / 255;
+  setContrast(value: Event): void {
+    const contrast: number = (value as CustomEvent).detail.value / 255;
     this.canvasService.setContrast(contrast);
   }
 
-  setGamma(value: CustomEvent): void {
-    const gamma: number = value.detail.value;
+  setGamma(value: Event): void {
+    const gamma: number = (value as CustomEvent).detail.value;
     this.canvasService.setGamma(gamma);
   }
 
