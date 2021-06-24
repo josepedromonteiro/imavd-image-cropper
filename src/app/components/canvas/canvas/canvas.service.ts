@@ -731,16 +731,31 @@ export class CanvasService {
       case 'triangle':
         this.canvasObjects.triangles.push(object);
         break;
-        break;
       case 'square':
         this.canvasObjects.squares.push(object);
-        break;
         break;
       case 'circle':
         this.canvasObjects.circle.push(object);
         break;
       case 'image':
         this.canvasObjects.images.push(object);
+        break;
+    }
+  }
+
+  private removeObjectFromArray(object: fabric.Object): void {
+    switch (object.type) {
+      case 'triangle':
+        this.canvasObjects.triangles = this.canvasObjects.triangles.filter( obj => obj !== object);
+        break;
+      case 'square':
+        this.canvasObjects.squares = this.canvasObjects.squares.filter( obj => obj !== object);
+        break;
+      case 'circle':
+        this.canvasObjects.circle = this.canvasObjects.circle.filter( obj => obj !== object);
+        break;
+      case 'image':
+        this.canvasObjects.images = this.canvasObjects.images.filter( obj => obj !== object);
         break;
     }
   }
@@ -786,8 +801,8 @@ export class CanvasService {
       this.canvas.add(objectTopLeft);
 
       this.ungroup(objectTopLeft);
-      // this.canvasObjects.images.push(objectTopLeft);
       this.canvas.remove(placeholderObject);
+      this.removeObjectFromArray(placeholderObject);
 
       this.canvas.requestRenderAll();
     }
@@ -801,13 +816,12 @@ export class CanvasService {
     const activeObject = object || this.canvas.getActiveObject();
     if (activeObject) {
       const objectBottomRight = fabric.util.object.clone(activeObject);
-      console.log(objectBottomRight);
       this.alignObject('bottom', objectBottomRight);
       this.alignObject('right', objectBottomRight);
       this.canvas.add(objectBottomRight);
       this.ungroup(objectBottomRight);
-      // this.canvasObjects.images.push(objectBottomRight);
       this.canvas.remove(placeholderObject);
+      this.removeObjectFromArray(placeholderObject);
 
       this.canvas.requestRenderAll();
     }
@@ -859,6 +873,7 @@ export class CanvasService {
   public ungroup(group?: fabric.Object): void {
     const obj = group || this.canvas.getActiveObject();
     if (obj?.type !== 'group') {
+      this.addObjectToArray(obj);
       return;
     }
 

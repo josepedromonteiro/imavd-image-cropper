@@ -19,7 +19,7 @@
           <div class="tts-content">
             <ion-item class="text-area">
               <ion-label position="stacked">Type the text you want to translate</ion-label>
-              <ion-textarea  rows="10" placeholder="Ex. My name is..." [(ngModel)]="text" [ngModelOptions]="{standalone: true}">
+              <ion-textarea  rows="10" placeholder="Ex. My name is..." [ngModel]="text" (ngModelChange)="onTextChange($event)" [ngModelOptions]="{standalone: true}">
               </ion-textarea>
             </ion-item>
             <div class="options">
@@ -38,6 +38,18 @@
     </ion-col>
     <ion-col size="12" size-xl="6">
       <app-speech-recognition></app-speech-recognition>
+    </ion-col>
+    <ion-col size="12">
+      <div class="">
+        <h2>Text comparator</h2>
+        <ion-row>
+          <td-ngx-text-diff #diff
+            [left]="left"
+            [right]="right"
+            (compareResults)="onCompareResults($event)"
+          ></td-ngx-text-diff>
+        </ion-row>
+      </div>
     </ion-col>
   </ion-row>
 </ion-grid>

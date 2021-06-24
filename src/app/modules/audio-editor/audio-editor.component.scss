@@ -114,4 +114,33 @@ app-audio-editor {
       margin-bottom: 15px;
     }
   }
+
+  td-ngx-text-diff{
+    width: 100%;
+    border-radius: 10px;
+    .td-wrapper{
+      width: 100%;
+      border-radius: 10px;
+      background-color: rgba(113, 112, 112, 0.3)!important;
+
+      table{
+        border: none!important;
+        background-color: white;
+      }
+    }
+
+    .td-checkbox-container{
+      margin: 8px;
+      color: white;
+    }
+
+    .td-btn-group-toggle{
+      button{
+        margin: 8px;
+        border-radius: 10px!important;
+        padding: 5px 10px;
+        outline: none!important;
+      }
+    }
+  }
 }

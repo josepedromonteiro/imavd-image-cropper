@@ -58,8 +58,8 @@ import './zone-flags';
  * Zone JS is required by default for Angular itself.
  */
 import 'zone.js/dist/zone';
-import {applyPolyfills} from '@josepedromonteiro/n21/loader';
-import {defineCustomElements} from '@josepedromonteiro/n21';  // Included with Angular CLI.
+// import {applyPolyfills} from '@josepedromonteiro/n21/loader';
+// import {defineCustomElements} from '@josepedromonteiro/n21';  // Included with Angular CLI.
 
 
 /***************************************************************************************************

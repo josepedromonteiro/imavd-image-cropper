@@ -5,8 +5,9 @@ import {RouterModule, Routes} from '@angular/router';
 import {IonicModule} from '@ionic/angular';
 import {SpeechRecognitionComponent} from '../../components/speech-recognition/speech-recognition.component';
 import {FormsModule} from '@angular/forms';
-import {ImportAudioComponent} from "../../components/import-audio/import-audio.component";
-import {NgxAudioPlayerModule} from "ngx-audio-player";
+import {ImportAudioComponent} from '../../components/import-audio/import-audio.component';
+import {NgxAudioPlayerModule} from 'ngx-audio-player';
+import {NgxTextDiffModule} from 'ngx-text-diff';
 
 
 const routes: Routes = [
@@ -28,7 +29,8 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     IonicModule,
     FormsModule,
-    NgxAudioPlayerModule
+    NgxAudioPlayerModule,
+    NgxTextDiffModule
   ],
   exports: [AudioEditorComponent, SpeechRecognitionComponent]
 })

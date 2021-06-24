@@ -30,13 +30,13 @@
         <div class="actions" *ngIf="(speechService.text | async) && !(speechService.isRecording | async)">
 
           <ion-button color="primary" (click)="clearText()">
-            <ion-icon name="clear"></ion-icon>
+            <ion-icon slot="start" name="close-outline"></ion-icon>
             Clear text
           </ion-button>
 
 
           <ion-button  color="primary" (click)="speak()">
-            <ion-icon name="volume-up"></ion-icon>
+            <ion-icon slot="start" name="volume-high-outline"></ion-icon>
             Speak
           </ion-button>
 
