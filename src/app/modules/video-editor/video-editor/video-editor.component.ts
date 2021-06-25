@@ -165,7 +165,20 @@ export class VideoEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
     context.clearRect(0, 0, canvas.width, canvas.height);
     results.forEach((bestMatch, i) => {
-      const identifiedUser = (bestMatch as any)._label !== 'unknown' ? users[i] : null;
+      let identifiedUser = (bestMatch as any)._label !== 'unknown' ? users[i] : null;
+
+      if((bestMatch as any)._label.includes('Monteiro')){
+        identifiedUser = users[0];
+      }
+
+      if((bestMatch as any)._label.includes('Silva')){
+        identifiedUser = users[1];
+      }
+
+      if((bestMatch as any)._label.includes('Castro')){
+        identifiedUser = users[2];
+      }
+
       if (this.userIdentified$.getValue() !== identifiedUser) {
         this.ngZone.run(() => {
           this.userIdentified$.next(identifiedUser);
