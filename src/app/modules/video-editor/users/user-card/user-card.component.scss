@@ -1,10 +1,19 @@
 app-user-card {
-
-  display: flex;
-  flex-direction: column;
+  display: block;
+  height: 100%;
+  overflow: hidden;
   .header{
-    position: sticky;
-    top: 0;
+    //position: sticky;
+    //top: 0;
+  }
+  .user-card{
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    .content{
+      flex: 1;
+      overflow: auto;
+    }
   }
 
   .content{
