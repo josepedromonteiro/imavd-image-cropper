@@ -7,7 +7,7 @@ import {SpeechRecognitionComponent} from '../../components/speech-recognition/sp
 import {FormsModule} from '@angular/forms';
 import {ImportAudioComponent} from '../../components/import-audio/import-audio.component';
 import {NgxAudioPlayerModule} from 'ngx-audio-player';
-import {NgxTextDiffModule} from 'ngx-text-diff';
+// import {NgxTextDiffModule} from 'ngx-text-diff';
 
 
 const routes: Routes = [
@@ -30,7 +30,7 @@ const routes: Routes = [
     IonicModule,
     FormsModule,
     NgxAudioPlayerModule,
-    NgxTextDiffModule
+    // NgxTextDiffModule
   ],
   exports: [AudioEditorComponent, SpeechRecognitionComponent]
 })

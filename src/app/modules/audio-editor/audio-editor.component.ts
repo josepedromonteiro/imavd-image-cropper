@@ -2,9 +2,7 @@ import {AfterViewInit, Component, OnInit, ViewChild, ViewEncapsulation} from '@a
 import {LanguageService} from '../../services/languages/language.service';
 import {SpeakService} from '../../services/speak/speak.service';
 import {DockService} from '../dock/dock.service';
-import {DiffResults} from 'ngx-text-diff/lib/ngx-text-diff.model';
 import {SpeechRecognitionService} from '../../services/speech-recognition/speech-recognition.service';
-import {NgxTextDiffComponent} from 'ngx-text-diff';
 
 @Component({
   selector: 'app-audio-editor',
@@ -23,7 +21,7 @@ export class AudioEditorComponent implements OnInit {
   public left = ``;
   public right = ``;
 
-  @ViewChild('diff') diffComponent: NgxTextDiffComponent;
+  // @ViewChild('diff') diffComponent: NgxTextDiffComponent;
 
   constructor(public languageService: LanguageService,
               public speakService: SpeakService,
@@ -41,7 +39,7 @@ export class AudioEditorComponent implements OnInit {
 
     this.speechService.text.subscribe((val) => {
       this.right = val;
-      this.diffComponent?.renderDiffs();
+      // this.diffComponent?.renderDiffs();
     });
   }
 
@@ -67,13 +65,13 @@ export class AudioEditorComponent implements OnInit {
   }
 
 
-  public onCompareResults(diffResults: DiffResults) {
-    // console.log('diffResults', diffResults);
-  }
+  // public onCompareResults(diffResults: DiffResults) {
+  //   // console.log('diffResults', diffResults);
+  // }
 
   onTextChange(val: string) {
     this.text = val;
     this.left = val;
-    this.diffComponent?.renderDiffs();
+    // this.diffComponent?.renderDiffs();
   }
 }
