@@ -133,7 +133,7 @@ export class VideoEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
     const users: User[] = this.usersService.users;
-    const labeledFaceDescriptors = await Promise.all(
+    let labeledFaceDescriptors = await Promise.all(
       users.map(async (user: User) => {
         // fetch image data from urls and convert blob to HTMLImage element
         // const imgUrl = `${label}.JPG`
@@ -148,15 +148,26 @@ export class VideoEditorComponent implements OnInit, AfterViewInit, OnDestroy {
           // console.error(`no faces detected for ${user.name}`);
         }
 
-        const faceDescriptors = fullFaceDescription_?.descriptor ? [fullFaceDescription_.descriptor] : [];
+        if (!fullFaceDescription_?.descriptor) {
+          return null;
+        }
+        const faceDescriptors = [fullFaceDescription_.descriptor];
         return new faceapi.LabeledFaceDescriptors(user.name, faceDescriptors);
       })
     );
 
+    labeledFaceDescriptors = labeledFaceDescriptors.filter(e => e != null);
+
     const maxDescriptorDistance = 0.6;
     const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, maxDescriptorDistance);
 
-    const results = fullFaceDescriptions.map(fd => faceMatcher.findBestMatch(fd.descriptor));
+    const results = fullFaceDescriptions.map(fd => {
+      if (fd) {
+        return faceMatcher.findBestMatch(fd.descriptor);
+      }
+
+      return null;
+    }).filter(e => e != null);
 
     const context = canvas.getContext('2d');
 
