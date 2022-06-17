@@ -1,19 +1,83 @@
 app-video-editor {
+
+  ion-toolbar {
+    background-color: orange;
+  }
+
+  .approximate {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    h1 {
+      margin-top: 20px;
+      font-size: 32px;
+      font-weight: bold;
+    }
+  }
+
+
+  .header {
+    //position: sticky;
+    //top: 0;
+    min-height: 120px;
+
+    display: flex;
+    align-items: center;
+
+    .avatar {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 15px;
+
+      img {
+        height: 100px;
+        width: 100px;
+        border-radius: 50px;
+        object-fit: cover;
+      }
+    }
+
+    .name {
+      text-align: center;
+      font-size: 24px;
+      margin-bottom: 20px;
+      margin-left: 20px;
+    }
+
+    h1 {
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+  }
+
   .video-container {
     height: 100%;
     width: 100%;
     display: flex;
     justify-content: center;
-    align-items: center;
     padding: 50px 50px 140px 50px;
 
 
     .users {
-      height: 100%;
-      background-color: rgba(var(--ion-text-color-rgb), .5);
+      //height: 100%;
+      //background-color: rgba(var(--ion-text-color-rgb), .5);
       border-radius: 30px;
       padding: 20px;
       flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: var(--transition-all);
+      height: fit-content;
+      margin: auto;
+
+      &.hide {
+        background-color: rgba(var(--ion-text-color-rgb), 0);
+        //padding: 0;
+      }
     }
 
     .media-area {
@@ -21,15 +85,16 @@ app-video-editor {
       position: relative;
       height: 100%;
       display: flex;
+      flex-direction: column;
       justify-content: center;
-      align-items: center;
+      //align-items: center;
       margin: 30px;
       width: 300px;
 
       .video {
-      //  position: absolute;
-      //  top: 0;
-      //  left: 0;
+        //  position: absolute;
+        //  top: 0;
+        //  left: 0;
         width: 100%;
         height: auto;
         border-radius: 15px;
@@ -46,6 +111,7 @@ app-video-editor {
         bottom: 0;
         right: 0;
         margin: auto;
+        max-width: 70%;
       }
     }
   }

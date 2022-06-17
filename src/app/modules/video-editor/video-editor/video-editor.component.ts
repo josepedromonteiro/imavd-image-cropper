@@ -52,7 +52,6 @@ export class VideoEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       debounceTime(500)
     ).subscribe((value: User) => {
       this.userIdentified = value;
-      console.log(value);
     });
   }
 
@@ -80,8 +79,6 @@ export class VideoEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   async onLoadedVideoMetadata(event: Event) {
-    console.log(event);
-
     const videoBounding: DOMRect = this.videoElement.nativeElement.getBoundingClientRect();
 
     this.displaySize = {
@@ -125,14 +122,14 @@ export class VideoEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     this.ngZone.runOutsideAngular(() => {
       this.interval = setInterval(() => {
         this.startFaceDetection(canvas);
-      }, 500);
+      }, 1000);
     });
   }
 
   private async startFaceDetection(canvas: HTMLCanvasElement) {
 
     const fullFaceDescriptions = await faceapi.detectAllFaces(this.videoElement.nativeElement).withFaceLandmarks().withFaceDescriptors();
-    const fullFaceDescription = faceapi.resizeResults(fullFaceDescriptions, this.displaySize);
+    // const fullFaceDescription = faceapi.resizeResults(fullFaceDescriptions, this.displaySize);
 
 
     const users: User[] = this.usersService.users;
@@ -147,11 +144,11 @@ export class VideoEditorComponent implements OnInit, AfterViewInit, OnDestroy {
           .withFaceLandmarks()
           .withFaceDescriptor();
 
-        if (!fullFaceDescription) {
-          throw new Error(`no faces detected for ${user.name}`);
+        if (!fullFaceDescription_) {
+          // console.error(`no faces detected for ${user.name}`);
         }
 
-        const faceDescriptors = [fullFaceDescription_.descriptor];
+        const faceDescriptors = fullFaceDescription_?.descriptor ? [fullFaceDescription_.descriptor] : [];
         return new faceapi.LabeledFaceDescriptors(user.name, faceDescriptors);
       })
     );
@@ -166,18 +163,7 @@ export class VideoEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     context.clearRect(0, 0, canvas.width, canvas.height);
     results.forEach((bestMatch, i) => {
       let identifiedUser = (bestMatch as any)._label !== 'unknown' ? users[i] : null;
-
-      if((bestMatch as any)._label.includes('Monteiro')){
-        identifiedUser = users[0];
-      }
-
-      if((bestMatch as any)._label.includes('Silva')){
-        identifiedUser = users[1];
-      }
-
-      if((bestMatch as any)._label.includes('Castro')){
-        identifiedUser = users[2];
-      }
+      identifiedUser = this.getUserByLabel((bestMatch as any)._label, users);
 
       if (this.userIdentified$.getValue() !== identifiedUser) {
         this.ngZone.run(() => {
@@ -207,5 +193,10 @@ export class VideoEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   ionViewDidLeave(): void {
     cancelAnimationFrame(this.requestFrame);
     clearInterval(this.interval);
+  }
+
+
+  getUserByLabel(label: string, users: User[]): User {
+    return users.filter(u => u.name?.toLowerCase() === label?.toLowerCase())[0];
   }
 }
